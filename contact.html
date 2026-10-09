@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact · EUSA</title>
+  <meta name="description" content="Email or message EUSA, the Endocrinology Undergraduate Students Association at UWaterloo.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Caveat:wght@700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="contact">
+<div id="site-header"></div>
+<main id="main">
+  <section class="page-hero">
+    <div class="bg-art" aria-hidden="true"><svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="3"><rect x="20" y="50" width="160" height="110" rx="18"/><path d="M20 62l80 55 80-55"/></svg></div>
+    <div class="container">
+      <span class="pill">Contact</span>
+      <h1>Send us a signal</h1>
+      <p class="lede">Questions, collabs, or just want to tell us your favourite hormone? Reach out.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <div class="contact-tiles">
+        <a class="card contact-tile" data-reveal style="--d:0s" href="mailto:eusauw@gmail.com"><div class="icon" id="ct-mail"></div><h3>Email</h3><p class="handle">eusauw@gmail.com</p></a>
+        <a class="card contact-tile" data-reveal style="--d:.1s" href="https://www.instagram.com/uw_eusa/" target="_blank" rel="noopener"><div class="icon" id="ct-insta"></div><h3>Instagram</h3><p class="handle">@uw_eusa</p></a>
+        <a class="card contact-tile" data-reveal style="--d:.2s" href="https://linktr.ee/uw_eusa" target="_blank" rel="noopener"><div class="icon" id="ct-link"></div><h3>Linktree</h3><p class="handle">linktr.ee/uw_eusa</p></a>
+      </div>
+      <div class="grid grid--2" style="margin-top:40px">
+        <div class="tbi-block" data-reveal><h3>Partner or sponsor with us</h3><p>Info for clubs, faculty and sponsors who want to collaborate (like our Periodic Picnic co-hosts).</p><span class="tbi">details to be included</span></div>
+        <div class="tbi-block" data-reveal style="--d:.1s"><h3>Find us on campus</h3><p>Where and when to catch the team in person.</p><span class="tbi">meeting spot / office hours to be included</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+<div id="site-footer"></div>
+<script src="assets/js/data.js"></script>
+<script src="assets/js/main.js"></script>
+<script>
+  document.getElementById("ct-mail").innerHTML = EUSA_ICONS.mail;
+  document.getElementById("ct-insta").innerHTML = EUSA_ICONS.insta;
+  document.getElementById("ct-link").innerHTML = EUSA_ICONS.link;
+</script>
+</body>
+</html>
