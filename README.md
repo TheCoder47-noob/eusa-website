@@ -3,6 +3,8 @@
 A demo website for **EUSA (Endocrinology Undergraduate Students Association, UWaterloo)**,
 made to show the founder before building the real thing. Full project brief: [BRIEF.md](BRIEF.md).
 
+**Live demo:** https://thecoder47-noob.github.io/eusa-website/ (GitHub Pages, redeploys on every push to `main`)
+
 ## How to open it
 
 Double-click `index.html`. It's plain HTML/CSS/JS, so no install or server is needed.
