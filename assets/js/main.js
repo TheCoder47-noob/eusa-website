@@ -33,7 +33,7 @@
     molecule: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M24 6l14 8v16l-14 8-14-8V14z"/><circle cx="24" cy="6" r="3.5" fill="currentColor"/><circle cx="38" cy="30" r="3.5" fill="currentColor"/><circle cx="10" cy="30" r="3.5" fill="currentColor"/><path d="M24 22v-6M24 22l8 5M24 22l-8 5"/></svg>',
     picnic: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><path d="M6 36l6-18h24l6 18z"/><path d="M12 18l4 18M24 18v18M36 18l-4 18M9 27h30"/><path d="M18 12c0-3 3-3 3-6M27 12c0-3 3-3 3-6"/></svg>',
     community: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="3" aria-hidden="true"><circle cx="24" cy="15" r="6"/><circle cx="10" cy="20" r="4.5"/><circle cx="38" cy="20" r="4.5"/><path d="M13 40c0-6 5-11 11-11s11 5 11 11M3 36c0-4 3-7 7-7M45 36c0-4-3-7-7-7"/></svg>',
-    glands: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M24 42c-6-4.6-12-9-12-17 0-5 4-8 7.4-7.4 2.6.4 4 2.4 4.6 4.4.6-2 2-4 4.6-4.4C32 17 36 20 36 25c0 8-6 12.4-12 17z"/><path d="M19 29q5 3 10 0"/><circle cx="10" cy="8" r="2" fill="currentColor"/><circle cx="38" cy="9" r="2.5" fill="currentColor"/><circle cx="42" cy="18" r="1.6" fill="currentColor"/></svg>',
+    glands: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linejoin="round" aria-hidden="true"><g transform="translate(5 3) scale(.38)"><path d="M50,76 C40,80 24,76 16,62 C8,48 8,28 14,14 C18,6 28,6 31,15 C35,30 40,50 50,56 C60,50 65,30 69,15 C72,6 82,6 86,14 C92,28 92,48 84,62 C76,76 60,80 50,76 Z M44,77 C46,86 48,92 50,99 C52,92 54,86 56,77" stroke-width="7"/></g><circle cx="9" cy="8" r="2" fill="currentColor" stroke="none"/><circle cx="40" cy="8" r="2.4" fill="currentColor" stroke="none"/></svg>',
     moon: '<svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.6" aria-hidden="true"><path d="M32 36a14 14 0 0 1-12-24 15 15 0 1 0 18 18 14 14 0 0 1-6 6z"/><path d="M34 8l1.5 3 3 1.5-3 1.5L34 17l-1.5-3-3-1.5 3-1.5zM40 22l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="currentColor" stroke="none"/></svg>',
     search: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true" width="20" height="20"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
     user: '<svg viewBox="0 0 48 48" fill="currentColor" aria-hidden="true"><circle cx="24" cy="17" r="9"/><path d="M6 44c0-10 8-16 18-16s18 6 18 16z"/></svg>',
@@ -42,12 +42,19 @@
   window.EUSA_ICONS = I;
 
   /* ---------- logo (PLACEHOLDER — swap for the club's real SVG/PNG) ---------- */
-  var HEART = "M50 90C28 72 10 56 10 36 10 20 22 10 34 12c8 1 13 7 16 14 3-7 8-13 16-14 12-2 24 8 24 24 0 20-18 36-40 54z";
-  function heartSVG(cls) {
-    return '<svg class="' + (cls || "") + '" viewBox="0 0 100 100" aria-hidden="true"><path d="' + HEART + '" fill="currentColor"/><path d="M36 52q14 10 28 0" fill="none" stroke="#3B5B4D" stroke-width="5" stroke-linecap="round" opacity=".45"/></svg>';
+  // Thyroid "U": two tall lobes, a deep valley between them, a narrow isthmus, and a tapering stalk below (matches the club's logo).
+  var THY = "M50,76 C40,80 24,76 16,62 C8,48 8,28 14,14 C18,6 28,6 31,15 C35,30 40,50 50,56 C60,50 65,30 69,15 C72,6 82,6 86,14 C92,28 92,48 84,62 C76,76 60,80 50,76 Z";
+  var THY_STALK = "M44,77 C46,86 48,92 50,99 C52,92 54,86 56,77 Z";
+  function thyInner(fill) {
+    return '<path d="' + THY + '" fill="' + fill + '"/><path d="' + THY_STALK + '" fill="' + fill + '"/>' +
+      '<ellipse cx="23" cy="33" rx="3.6" ry="9" transform="rotate(-14 23 33)" fill="#8FB873"/><ellipse cx="77" cy="33" rx="3.6" ry="9" transform="rotate(14 77 33)" fill="#8FB873"/>' +
+      '<circle cx="50" cy="68" r="3" fill="#8FB873"/><circle cx="50" cy="86" r="2.4" fill="#8FB873"/>';
+  }
+  function heartSVG(cls) {   // kept name: used for the "U" in the EUSA wordmark
+    return '<svg class="' + (cls || "") + '" viewBox="0 0 100 100" aria-hidden="true">' + thyInner("currentColor") + "</svg>";
   }
   function badgeSVG() {
-    return '<svg class="brand-badge" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#3B5B4D" stroke="#A8D5B4" stroke-width="4"/><g transform="translate(22 22) scale(.56)"><path d="' + HEART + '" fill="#F2ECD9"/></g></svg>';
+    return '<svg class="brand-badge" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="#3B5B4D" stroke="#A8D5B4" stroke-width="4"/><g transform="translate(27 22) scale(.46)">' + thyInner("#F2ECD9") + "</g></svg>";
   }
   function bigLogoSVG() {
     return '<svg class="hero-logo" viewBox="0 0 400 400" role="img" aria-label="EUSA logo (placeholder)">' +
@@ -57,8 +64,8 @@
       '<text fill="#F2ECD9" font-family="DM Sans, sans-serif" font-weight="700" font-size="16" letter-spacing="2"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">ENDOCRINOLOGY UNDERGRADUATE</textPath></text>' +
       '<text fill="#F2ECD9" font-family="DM Sans, sans-serif" font-weight="700" font-size="16" letter-spacing="2"><textPath href="#arcBot" startOffset="50%" text-anchor="middle">STUDENTS ASSOCIATION</textPath></text>' +
       '<g font-family="Big Shoulders Display, Oswald, Impact, sans-serif" font-weight="900" font-size="150" fill="#A8D5B4">' +
-      '<text x="104" y="252" text-anchor="middle">E</text><text x="303" y="252" text-anchor="middle">SA</text></g>' +
-      '<g transform="translate(142 140)"><g class="heart"><path d="' + HEART + '" fill="#F2ECD9"/><path d="M36 52q14 10 28 0" fill="none" stroke="#3B5B4D" stroke-width="4" stroke-linecap="round" opacity=".5"/></g></g>' +
+      '<text x="100" y="252" text-anchor="middle">E</text><text x="306" y="252" text-anchor="middle">SA</text></g>' +
+      '<g transform="translate(138 118) scale(1.24)"><g class="thy">' + thyInner("#F2ECD9") + '</g></g>' +
       "</svg>";
   }
   window.EUSA_LOGO = { big: bigLogoSVG, heart: heartSVG, badge: badgeSVG };
@@ -228,7 +235,7 @@
     var list = $("#learn-list"), q = $("#learn-q"), empty = $("#learn-empty");
     function draw() {
       var term = (q.value || "").trim().toLowerCase();
-      var hits = D.learn.filter(function (a) { return !term || (a.title + " " + a.summary + " " + a.tags.join(" ") + " " + a.body).toLowerCase().indexOf(term) > -1; });
+      var hits = D.learn.filter(function (a) { return !term || (a.title + " " + a.summary + " " + a.tags.join(" ") + " " + a.steps.map(function (x) { return x.title + " " + x.html.replace(/<[^>]+>/g, " "); }).join(" ")).toLowerCase().indexOf(term) > -1; });
       list.innerHTML = hits.map(learnCard).join("") + (!term ? learnPlaceholder(hits.length) : "");
       empty.hidden = hits.length > 0 || !term;
       observeReveals(list);
@@ -244,11 +251,19 @@
     $("#a-summary").textContent = a.summary;
     $("#a-meta").innerHTML = (a.status === "draft" ? '<span class="tag tag--draft">Draft · pending VP Academics review</span>' : "") +
       a.tags.map(function (t) { return '<span class="tag" style="background:rgba(168,213,180,.2);color:var(--cream)">' + esc(t) + "</span>"; }).join("") +
-      '<p style="margin-top:10px">By ' + (a.author ? esc(a.author) : "EUSA Academics team " + tbi("author name")) + " · " + a.readMins + " min read</p>";
+      '<p style="margin-top:10px">By ' + (a.author ? esc(a.author) : "EUSA Academics team " + tbi("author name")) + " · " + a.readMins + " min read · scroll to play</p>";
     $("#a-icon").innerHTML = I[a.icon] || I.molecule;
-    $("#a-body").innerHTML = a.body +
+    var steps = a.steps.map(function (st) {
+      return '<div class="step" data-scene="' + esc(st.scene) + '"><div class="container"><div class="step__card"><span class="step__num">' + esc(st.num) + "</span><h3>" + esc(st.title) + "</h3>" + st.html + "</div></div></div>";
+    }).join("");
+    $("#a-story").innerHTML = '<section class="scrolly scrolly--article' + (a.slug === "melatonin" ? "" : " scrolly--forest") + '" data-scrolly="article" aria-label="Animated explainer: ' + esc(a.title) + '">' +
+      '<div class="scrolly__stage"><div class="scrolly__visual"><svg viewBox="0 0 640 520" role="img" aria-label="Animated diagram for ' + esc(a.title) + '"></svg></div></div>' +
+      '<div class="scrolly__steps">' + steps + "</div></section>";
+    $("#a-body").innerHTML =
       '<div class="callout callout--warn"><strong>Not medical advice.</strong> This content is for education only and is not medical advice. Talk to a healthcare provider about your own health.</div>' +
-      '<div class="sources"><h3>Sources</h3><ol>' + a.sources.map(function (s) { return '<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + "</a></li>"; }).join("") + "</ol>" +
+      '<div class="sources"><h3>Sources</h3><ol>' + a.sources.map(function (x) {
+        return "<li>" + (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.label) + "</a>" : esc(x.label)) + "</li>";
+      }).join("") + "</ol>" +
       (a.sourcesTbi ? '<p style="margin:10px 0 0">' + tbi("more sources + VP Academics check") + "</p>" : "") + "</div>";
     var others = D.learn.filter(function (x) { return x !== a; });
     $("#a-more").innerHTML = others.map(learnCard).join("") + learnPlaceholder(others.length);

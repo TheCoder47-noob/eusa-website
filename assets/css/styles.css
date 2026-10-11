@@ -147,7 +147,7 @@ body.show-tbi .tbi, body.show-tbi .tbi-block {
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--cream); }
 .brand-badge { width: 40px; height: 40px; flex: none; }
 .wordmark { display: inline-flex; align-items: center; font: 900 1.7rem/1 var(--font-display); letter-spacing: .04em; color: var(--mint); }
-.wordmark .u-heart { width: .78em; height: .78em; margin: 0 .04em; color: var(--cream); }
+.wordmark .u-heart { width: .8em; height: .8em; margin-bottom: -.04em; margin: 0 .04em; color: var(--cream); }
 .nav { display: flex; align-items: center; gap: 4px; }
 .nav a {
   color: var(--cream); text-decoration: none; font-weight: 600; font-size: .95rem;
@@ -207,8 +207,8 @@ body.show-tbi .tbi, body.show-tbi .tbi-block {
 .hero .lede { color: rgba(242,236,217,.92); margin-bottom: 26px; }
 .hero-logo { justify-self: center; width: min(78vw, 380px); filter: drop-shadow(0 30px 60px rgba(0,0,0,.35)); animation: floaty 6s ease-in-out infinite; }
 @keyframes floaty { 50% { transform: translateY(-14px) rotate(1.5deg); } }
-.hero-logo .heart { transform-origin: 50% 55%; transform-box: fill-box; animation: beat 1.6s ease-in-out infinite; }
-@keyframes beat { 0%, 100% { transform: scale(1); } 12% { transform: scale(1.09); } 24% { transform: scale(1); } 36% { transform: scale(1.06); } }
+.hero-logo .thy { transform-origin: 50% 40%; transform-box: fill-box; animation: beat 1.6s ease-in-out infinite; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.05); } 30% { transform: scale(1); } 45% { transform: scale(1.03); } }
 .logo-note { font-size: .78rem; color: var(--mint); text-align: center; margin-top: 10px; }
 .scroll-cue {
   position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
@@ -503,4 +503,26 @@ a.card:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 24px 50
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
   [data-reveal] { opacity: 1; transform: none; }
   .hero h1 .word > span { transform: none; }
+}
+
+/* ---------- scroll hint arrow inside every step card ---------- */
+.step__hint { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(168,213,180,.2); color: var(--mint); font: 700 .72rem/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; }
+.step__hint .chevs { display: grid; width: 18px; height: 22px; place-items: center; }
+.step__hint .chevs i { display: block; width: 9px; height: 9px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); margin-top: -4px; opacity: 0; animation: chevRun 1.5s infinite; }
+.step__hint .chevs i:nth-child(2) { animation-delay: .25s; }
+.step__hint .chevs i:nth-child(3) { animation-delay: .5s; }
+@keyframes chevRun { 0% { opacity: 0; transform: translateY(-6px) rotate(45deg); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(6px) rotate(45deg); } }
+
+/* ---------- home: jump-to-story buttons ---------- */
+.story-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
+.story-nav a { display: inline-flex; align-items: center; gap: 8px; padding: .7em 1.2em; min-height: 46px; border-radius: 999px; border: 2px solid var(--mint); color: var(--cream); text-decoration: none; font-weight: 700; transition: background .25s, color .25s, transform .25s var(--ease); }
+.story-nav a b { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--mint); color: var(--forest-ink); font-size: .8rem; }
+.story-nav a:hover { background: var(--mint); color: var(--forest-ink); transform: translateY(-2px); }
+.story-nav a:hover b { background: var(--forest-ink); color: var(--mint); }
+[id^="story-"], #tour-intro { scroll-margin-top: var(--header-h); }
+.btn--down svg { animation: nudge 1.4s ease-in-out infinite; }
+@keyframes nudge { 50% { transform: translateY(4px); } }
+
+@media (max-width: 860px) {
+  .scrolly--article .scrolly__visual { align-items: flex-start; }
 }

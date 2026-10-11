@@ -42,6 +42,11 @@
     var bar = document.createElement("div"); bar.className = "scrolly__bar"; bar.innerHTML = "<i></i>"; st.stage.appendChild(bar); st.bar = bar.firstChild;
     var dots = document.createElement("div"); dots.className = "scrolly__dots"; dots.setAttribute("aria-hidden", "true");
     dots.innerHTML = st.steps.map(function () { return "<i></i>"; }).join(""); st.stage.appendChild(dots); st.dots = [].slice.call(dots.children);
+    st.steps.forEach(function (x) {
+      var c = x.querySelector(".step__card"); if (!c) return;
+      var h = document.createElement("div"); h.className = "step__hint"; h.setAttribute("aria-hidden", "true");
+      h.innerHTML = '<span class="chevs"><i></i><i></i><i></i></span><span>Keep scrolling</span>'; c.appendChild(h);
+    });
     st.api = init(st) || {};
     stories.push(st);
   }
@@ -90,12 +95,12 @@
     '<g class="label"><line x1="137" y1="90" x2="44" y2="116"/><text x="40" y="112" text-anchor="end">Hypothalamus</text><text x="40" y="131" text-anchor="end">+ pituitary</text></g></g>' +
     '<g class="gland" data-g="pineal"><circle class="ring" cx="163" cy="66" r="6"/><ellipse class="shape" cx="163" cy="66" rx="5.5" ry="4.2"/>' +
     '<g class="label"><line x1="169" y1="64" x2="258" y2="46"/><text x="262" y="51">Pineal</text></g></g>' +
-    '<g class="gland" data-g="thyroid"><circle class="ring" cx="150" cy="146" r="10"/><path class="shape" d="M150,160 C140,156 132,150 131,141 C130,133 137,129 143,133 C146,135 148,138 150,140 C152,138 154,135 157,133 C163,129 170,133 169,141 C168,150 160,156 150,160 Z"/>' +
-    '<g class="label"><line x1="170" y1="144" x2="258" y2="140"/><text x="262" y="145">Thyroid</text></g></g>' +
+    '<g class="gland" data-g="thyroid"><circle class="ring" cx="150" cy="146" r="10"/><path class="shape" vector-effect="non-scaling-stroke" transform="translate(130 128) scale(.4)" d="M50,76 C40,80 24,76 16,62 C8,48 8,28 14,14 C18,6 28,6 31,15 C35,30 40,50 50,56 C60,50 65,30 69,15 C72,6 82,6 86,14 C92,28 92,48 84,62 C76,76 60,80 50,76 Z"/>' +
+    '<g class="label"><line x1="172" y1="146" x2="258" y2="140"/><text x="262" y="145">Thyroid</text></g></g>' +
     '<g class="gland" data-g="adrenal"><circle class="ring" cx="124" cy="283" r="7"/><circle class="ring" cx="176" cy="283" r="7"/><path class="shape" d="M115,289 Q124,270 133,289 Z"/><path class="shape" d="M167,289 Q176,270 185,289 Z"/>' +
     '<g class="label"><line x1="114" y1="283" x2="44" y2="252"/><text x="40" y="256" text-anchor="end">Adrenals</text></g></g>' +
-    '<g class="gland" data-g="pancreas"><circle class="ring" cx="156" cy="321" r="10"/><path class="shape" d="' + PANCREAS + '"/>' +
-    '<g class="label"><line x1="193" y1="320" x2="258" y2="336"/><text x="262" y="341">Pancreas</text></g></g>' +
+    '<g class="gland" data-g="pancreas"><circle class="ring" cx="156" cy="321" r="10"/><path class="shape" vector-effect="non-scaling-stroke" transform="translate(156 321) scale(.5 .72) translate(-156 -321)" d="' + PANCREAS + '"/>' +
+    '<g class="label"><line x1="178" y1="322" x2="258" y2="336"/><text x="262" y="341">Pancreas</text></g></g>' +
     '<g class="gland" data-g="gonads"><circle class="ring" cx="136" cy="402" r="7"/><circle class="ring" cx="164" cy="402" r="7"/><ellipse class="shape" cx="136" cy="402" rx="8" ry="6"/><ellipse class="shape" cx="164" cy="402" rx="8" ry="6"/>' +
     '<g class="label"><line x1="127" y1="406" x2="44" y2="440"/><text x="40" y="445" text-anchor="end">Ovaries / testes</text></g></g>' +
     '<g id="tour-parts"></g>';
@@ -104,9 +109,9 @@
     intro: ["M150,166 L150,405", "M150,180 C110,190 80,230 62,330", "M150,180 C190,190 220,230 238,330", "M150,405 C130,450 125,500 125,590", "M150,405 C170,450 175,500 175,590"],
     hypo: ["M148,101 C152,120 151,130 150,140", "M147,101 C140,180 128,230 124,277", "M149,101 C162,180 172,230 176,277", "M148,101 C150,250 140,330 136,396", "M149,101 C150,250 160,330 164,396"],
     pineal: ["M164,70 C200,90 208,140 215,190 S 235,300 240,380", "M162,70 C120,95 95,140 85,200 S 65,300 60,380", "M163,70 C160,150 150,260 150,400"],
-    thyroid: ["M150,152 C110,180 80,230 62,330", "M150,152 C190,180 220,230 238,330", "M150,152 C148,250 150,350 125,560", "M150,152 C152,250 150,350 175,560", "M150,152 C140,190 130,220 128,252"],
+    thyroid: ["M150,160 C110,180 80,230 62,330", "M150,160 C190,180 220,230 238,330", "M150,160 C148,250 150,350 125,560", "M150,160 C152,250 150,350 175,560", "M150,160 C140,190 130,220 128,252"],
     adrenal: ["M124,280 C140,250 155,230 160,214", "M176,280 C170,250 166,232 162,214", "M124,284 C96,330 76,370 60,405", "M176,284 C172,380 176,450 178,560"],
-    pancreas: ["M140,320 C130,300 124,280 126,262", "M160,324 C120,380 115,450 122,560", "M175,322 C205,335 228,365 242,405", "M150,326 C120,340 90,370 58,405"],
+    pancreas: ["M146,320 C134,300 126,280 126,262", "M160,324 C120,380 115,450 122,560", "M170,322 C205,335 228,365 242,405", "M150,326 C120,340 90,370 58,405"],
     gonads: ["M136,398 C110,330 100,250 108,190", "M164,398 C190,330 200,250 192,190", "M150,402 C150,300 150,200 150,140", "M136,408 C130,470 128,520 125,590", "M164,408 C170,470 172,520 175,590"]
   };
   var TOUR_STEPS = ["intro", "hypo", "pineal", "thyroid", "adrenal", "pancreas", "gonads", "all"];
@@ -352,8 +357,7 @@
   });
 
   /* =========================== 4. MELATONIN =========================== */
-  register("melatonin", function (st) {
-    var svg = st.root.querySelector("svg");
+  function melScene(svg) {
     var defs = el("defs", {}, svg);
     defs.innerHTML = '<linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop id="skyTop" offset="0"/><stop id="skyBot" offset="1"/></linearGradient>' +
       '<clipPath id="skyClip"><rect x="0" y="0" width="640" height="300" rx="24"/></clipPath>' +
@@ -399,9 +403,8 @@
     function mel(h) { return .06 + .9 * smooth(20.5, 26, h) * (1 - smooth(27.5, 31.2, h)); }
     var DAY_T = hex2rgb("#BFE0C4"), DAY_B = hex2rgb("#EDF5E6"), NIGHT_T = hex2rgb("#12201A"), NIGHT_B = hex2rgb("#2B4439"), DUSK_T = hex2rgb("#4E7A64"), DUSK_B = hex2rgb("#EBD7AC");
 
-    function frame(s, t) {
+    function frame(h, t) {
       var ts = t / 1000;
-      var h = interp(s, [-1, 0, 1, 2, 3], [14, 15, 21, 27, 31]);
       var night = smooth(19, 21.6, h) * (1 - smooth(29, 31, h));
       var dusk = Math.max(0, 1 - Math.abs(h - 20.1) / 1.4, 1 - Math.abs(h - 30.2) / 1.2);
       var top = mixRgb(mixRgb(DAY_T, NIGHT_T, night), DUSK_T, dusk * .75);
@@ -444,6 +447,10 @@
       dot.setAttribute("cx", hx(hCur).toFixed(1)); dot.setAttribute("cy", my(mel(hCur)).toFixed(1));
     }
     return { frame: frame };
+  }
+  register("melatonin", function (st) {
+    var scene = melScene(st.root.querySelector("svg"));
+    return { frame: function (s, t) { scene.frame(interp(s, [-1, 0, 1, 2, 3], [14, 15, 21, 27, 31]), t); } };
   });
 
   /* =========================== endo-crying word reel =========================== */
@@ -553,6 +560,12 @@
     if (REDUCED) { draw(0); return; }
     extraFrames.push(function (t) { if (visible) draw(t); });
   })();
+
+  window.EUSA_ANIM = {
+    register: register, el: el, clamp: clamp, seg: seg, ease: ease, lerp: lerp, interp: interp, smooth: smooth,
+    REDUCED: REDUCED, melScene: melScene, TOUR_SVG: TOUR_SVG, PANCREAS: PANCREAS, HEART: HEART,
+    refresh: function () { if (REDUCED) loop(0); }
+  };
 
   /* =========================== go =========================== */
   if (REDUCED) {

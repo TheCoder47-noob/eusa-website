@@ -17,9 +17,10 @@ every "to be included" placeholder. `founder-notes.html` lists what's still need
 
 | File | What it is |
 |---|---|
-| `assets/js/data.js` | **All editable content**: contact links, hiring banner switch, events, Learn articles, team |
+| `assets/js/data.js` | **All editable content**: contact links, hiring banner switch, events, Learn articles (a list of `steps`, each with a `scene`), team |
 | `assets/js/main.js` | Shared header/footer, hiring banner, demo panel, page renderers |
-| `assets/js/anim.js` | Scroll-driven animations (gland tour, insulin, stress/HPA, melatonin), hero canvas, About lock-and-key |
+| `assets/js/anim.js` | Scroll-driven animations on the home page (gland tour, insulin, stress/HPA, melatonin), hero canvas, About lock-and-key; also exposes helpers for the article scenes |
+| `assets/js/learn-anim.js` | The animated scenes behind each Learn article (one scene per `scene` id used in `data.js`) |
 | `assets/css/styles.css` | All styles; colour tokens at the top |
 | `*.html` | One file per page; `article.html?slug=...` renders a Learn article |
 
