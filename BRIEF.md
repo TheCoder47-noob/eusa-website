@@ -33,7 +33,7 @@ term looks like Spring 2026.
 workshops planned), Events (**The Periodic Picnic** — SLC Green Space, 5–7 pm, free food/drinks, music,
 board games; posts show July 16 and July 29, 2026; co-hosted incl. Science Society, **[TODO]** other
 partners; RSVP form used), Community (First-Year Reps). Tone mixes serious science with student humour
-(reel: "endocrine → endocrying → endotrying → endodying → endofrying").
+(a reel jokes about "endocrying"; the website no longer uses that joke).
 
 **Exec structure:** Admin (President, VP Internal, VP Finance) · Academics (VP Academics, Academics
 Coordinator) · Events (VP Events, Events Coordinator) · Marketing (VP Marketing, Marketing Coordinator /

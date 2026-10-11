@@ -21,7 +21,7 @@ club info. Plain multi-page HTML/CSS/JS, no build step, no dependencies. `BRIEF.
    in HTML. The Demo button (bottom-left) can highlight them all.
 2. Use the name **"Endocrinology Undergraduate Students Association"** (matches the logo), not "Student".
 3. Don't call EUSA an "official WUSA club" or use WUSA/UW logos until confirmed.
-4. Science content must be accurate. The club's own slides contained errors (see the founder checklist .docx in the workspace folder and the `note`
+4. Science content must be accurate (games too: e.g. never imply insulin itself carries glucose into cells; it binds a receptor and triggers signalling). The club's own slides contained errors (see the founder checklist .docx in the workspace folder and the `note`
    fields in `data.js`); don't copy them back. Every Learn article keeps its Sources list and the "not medical advice" note.
 5. Palette is greens + cream only (tokens at top of `styles.css`); yellow `--sun` is only for the hiring banner / demo UI.
    Caveat script only for the tagline. The cut-out collage heading is used once (Team page).
@@ -34,6 +34,7 @@ club info. Plain multi-page HTML/CSS/JS, no build step, no dependencies. `BRIEF.
 | `assets/js/main.js` | Header/footer injection, hiring banner, Demo panel, reveal-on-scroll, per-page renderers (`data-page` on `<body>`), the **logo** (`thyInner`, `badgeSVG`, `bigLogoSVG`) |
 | `assets/js/anim.js` | Home-page scroll stories + hero canvas + About lock-and-key. Defines the scrolly engine (`register`) and exposes `window.EUSA_ANIM` helpers |
 | `assets/js/learn-anim.js` | Scenes for the Learn articles (loaded only on `article.html`) |
+| `assets/js/games.js`, `assets/css/games.css`, `games.html` | Three mini-games (hash-routed: `#gland`, `#homeo`, `#delivery`): Guess the Gland, Homeostasis Challenge, Hormone Delivery Simulator. Keep them simple: no accounts/leaderboards/settings. Best scores in `localStorage` (`eusa-best-<id>`). Game 1 reuses the body map (`EUSA_ANIM.TOUR_SVG`), so `anim.js` loads on that page |
 | `assets/css/styles.css` | Everything; later `@media` blocks override earlier rules, so mobile overrides must stay *after* base rules |
 | `index/about/events/learn/article/team/get-involved/contact.html` | One page each; `article.html?slug=…` renders any `learn` entry |
 | `../EUSA-Founder-Checklist.docx` | Word doc for the founder: what we still need from the club + issues found. Kept outside the repo on purpose (the repo is public) |
@@ -45,7 +46,7 @@ in `anim.js` finds `[data-scrolly=name]`, computes `s` (screens scrolled into th
 and calls `api.frame(s, t)` every animation frame; visuals are pure functions of `s` and time, so scrolling backwards works.
 It also injects the "Keep scrolling" arrow into every card and the progress bar/dots.
 
-- **Home**: four stories (gland tour, insulin, HPA stress axis, melatonin). Their *info text* is the club's approved intro
+- **Home**: four stories (the "endocrying" joke was removed at the user's request; don't re-add it). Each message card has a running arrow below it (`.step__arrow`, injected by `register`) (gland tour, insulin, HPA stress axis, melatonin). Their *info text* is the club's approved intro
   content: don't change it without being asked. The thyroid on the body is a deep U (two lobes, valley between) and the
   pancreas is deliberately about half the torso width.
 - **Articles**: `renderArticle()` builds one `.scrolly` per article from `learn[].steps`. Each step has `scene`; consecutive
@@ -72,7 +73,8 @@ Ignore console noise from browser extensions (Grammarly, etc.); use `--disable-e
 ## Gotchas
 
 - Large inline Python/JS in a bash heredoc has failed here; write the script to a file and run it instead.
-- Don't use `localStorage` for anything but the Demo panel toggles (`eusa-demo-*`), wrapped in try/catch.
+- `localStorage` is only used for the Demo panel toggles (`eusa-demo-*`) and game best scores (`eusa-best-*`), always in try/catch.
+- CSS class names are global across pages: the games once clashed with the home page's `.meter` (renamed `.gmeter`). Check `styles.css` before naming a new class.
 - Source links in `data.js`: Cleveland Clinic, PMC (Hiller-Sturmhöfel & Bartke), NCCIH and OpenStax were checked (HTTP 200).
   The Johns Hopkins page is not linked because scripted requests are blocked (Cloudflare), so its URL is unverified.
 - No Instagram feed widget (per brief); no backend; contact is `mailto:` only.

@@ -20,6 +20,7 @@ every "to be included" placeholder. What's still needed from the club is listed 
 | `assets/js/data.js` | **All editable content**: contact links, hiring banner switch, events, Learn articles (a list of `steps`, each with a `scene`), team |
 | `assets/js/main.js` | Shared header/footer, hiring banner, demo panel, page renderers |
 | `assets/js/anim.js` | Scroll-driven animations on the home page (gland tour, insulin, stress/HPA, melatonin), hero canvas, About lock-and-key; also exposes helpers for the article scenes |
+| `assets/js/games.js` + `assets/css/games.css` | The three mini-games on `games.html` (Guess the Gland, Homeostasis Challenge, Hormone Delivery); best scores in localStorage |
 | `assets/js/learn-anim.js` | The animated scenes behind each Learn article (one scene per `scene` id used in `data.js`) |
 | `assets/css/styles.css` | All styles; colour tokens at the top |
 | `*.html` | One file per page; `article.html?slug=...` renders a Learn article |

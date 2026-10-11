@@ -105,7 +105,7 @@
   }
 
   /* ---------- header & footer ---------- */
-  var NAV = [["index.html", "Home", "home"], ["about.html", "About", "about"], ["events.html", "Events", "events"], ["learn.html", "Learn", "learn"], ["team.html", "Team", "team"], ["get-involved.html", "Get Involved", "involved"], ["contact.html", "Contact", "contact"]];
+  var NAV = [["index.html", "Home", "home"], ["about.html", "About", "about"], ["events.html", "Events", "events"], ["learn.html", "Learn", "learn"], ["games.html", "Games", "games"], ["team.html", "Team", "team"], ["get-involved.html", "Get Involved", "involved"], ["contact.html", "Contact", "contact"]];
   function renderChrome() {
     var h = $("#site-header");
     if (h) {

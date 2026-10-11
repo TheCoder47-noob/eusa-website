@@ -309,19 +309,6 @@ body.show-tbi .tbi, body.show-tbi .tbi-block {
 .conn-label { fill: var(--mint); font: 800 16px var(--font-display); letter-spacing: .08em; opacity: 0; transition: opacity .4s; }
 .conn-label.on { opacity: 1; }
 
-/* endocrying */
-.endo { position: relative; height: 320vh; background: var(--cream); }
-.endo__stage { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; text-align: center; padding: var(--header-h) var(--gutter) 0; overflow: hidden; }
-.endo__word { margin: 0; font: 900 clamp(3.4rem, 15vw, 11rem)/1 var(--font-display); text-transform: uppercase; color: var(--leaf); display: flex; align-items: flex-end; justify-content: center; letter-spacing: .01em; }
-.endo__slot { display: inline-block; height: 1em; overflow: hidden; color: var(--forest); text-align: left; }
-.endo__reel { display: flex; flex-direction: column; transition: transform .6s cubic-bezier(.6,-0.3,.3,1.4); }
-.endo__reel span { height: 1em; display: block; }
-.endo__reel span:nth-child(2), .endo__reel span:nth-child(4) { color: #4f7a63; }
-.endo__caption { font-size: clamp(1.1rem, 2.6vw, 1.5rem); margin-top: 18px; min-height: 3em; max-width: 30ch; margin-inline: auto; transition: opacity .3s; }
-.endo__kicker { font-family: var(--font-script); font-size: 1.7rem; color: var(--forest); transform: rotate(-2deg); }
-.endo__chips { display: flex; gap: 8px; justify-content: center; margin-top: 20px; }
-.endo__chips i { width: 34px; height: 6px; border-radius: 3px; background: rgba(45,74,34,.18); transition: background .3s; }
-.endo__chips i.on { background: var(--leaf); }
 
 /* ---------- cards / grids ---------- */
 .grid { display: grid; gap: 20px; }
@@ -505,14 +492,15 @@ a.card:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 24px 50
   .hero h1 .word > span { transform: none; }
 }
 
-/* ---------- "keep scrolling" arrow: fixed on the stage (the cards move, this doesn't) ---------- */
-.stage-hint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 10px; padding: .5em 1.1em .5em .8em; border-radius: 999px; background: rgba(31,50,41,.78); border: 1px solid rgba(168,213,180,.3); color: var(--mint); font: 700 .72rem/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
-.stage-hint .chevs { display: grid; width: 18px; height: 22px; place-items: center; }
-.stage-hint .chevs i { display: block; width: 9px; height: 9px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); margin-top: -4px; opacity: 0; animation: chevRun 1.5s infinite; }
-.stage-hint .chevs i:nth-child(2) { animation-delay: .25s; }
-.stage-hint .chevs i:nth-child(3) { animation-delay: .5s; }
-@keyframes chevRun { 0% { opacity: 0; transform: translateY(-6px) rotate(45deg); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(6px) rotate(45deg); } }
-@media (max-width: 860px) { .stage-hint { bottom: 6px; padding: .4em .9em .4em .6em; font-size: .64rem; } }
+/* ---------- running arrow in the gap under each message card ---------- */
+.step .container { flex-direction: column; align-items: flex-start; }
+.step__arrow { width: min(440px, 40vw); display: flex; flex-direction: column; align-items: center; margin-top: 14px; opacity: 0; transition: opacity .5s; pointer-events: none; }
+.step.is-active .step__arrow { opacity: 1; }
+.step__arrow i { display: block; width: 20px; height: 20px; border-right: 4px solid var(--mint); border-bottom: 4px solid var(--mint); border-radius: 2px; transform: rotate(45deg); margin-top: -9px; opacity: 0; animation: chevRun 1.5s infinite; }
+.step__arrow i:nth-child(2) { animation-delay: .25s; }
+.step__arrow i:nth-child(3) { animation-delay: .5s; }
+@keyframes chevRun { 0% { opacity: 0; transform: translateY(-8px) rotate(45deg); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(8px) rotate(45deg); } }
+@media (max-width: 860px) { .step__arrow { width: 100%; margin-top: 4px; } .step__arrow i { width: 14px; height: 14px; border-width: 3px; margin-top: -6px; } }
 
 /* ---------- home: jump-to-story buttons ---------- */
 .story-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }

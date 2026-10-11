@@ -42,8 +42,11 @@
     var bar = document.createElement("div"); bar.className = "scrolly__bar"; bar.innerHTML = "<i></i>"; st.stage.appendChild(bar); st.bar = bar.firstChild;
     var dots = document.createElement("div"); dots.className = "scrolly__dots"; dots.setAttribute("aria-hidden", "true");
     dots.innerHTML = st.steps.map(function () { return "<i></i>"; }).join(""); st.stage.appendChild(dots); st.dots = [].slice.call(dots.children);
-    var hint = document.createElement("div"); hint.className = "stage-hint"; hint.setAttribute("aria-hidden", "true");
-    hint.innerHTML = '<span class="chevs"><i></i><i></i><i></i></span><span>Keep scrolling</span>'; st.stage.appendChild(hint);
+    st.steps.forEach(function (x) {   // a running arrow in the gap under each message card
+      var c = x.querySelector(".step__card"); if (!c) return;
+      var a = document.createElement("div"); a.className = "step__arrow"; a.setAttribute("aria-hidden", "true");
+      a.innerHTML = "<i></i><i></i><i></i>"; c.parentNode.appendChild(a);
+    });
     st.api = init(st) || {};
     stories.push(st);
   }
@@ -449,22 +452,6 @@
     var scene = melScene(st.root.querySelector("svg"));
     return { frame: function (s, t) { scene.frame(interp(s, [-1, 0, 1, 2, 3], [14, 15, 21, 27, 31]), t); } };
   });
-
-  /* =========================== endo-crying word reel =========================== */
-  (function () {
-    var root = document.querySelector(".endo"); if (!root) return;
-    var reel = root.querySelector(".endo__reel"), cap = root.querySelector(".endo__caption"), chips = [].slice.call(root.querySelectorAll(".endo__chips i"));
-    var CAPS = ["The study of hormones. Very serious science.", "When the exam has four pages of feedback loops.", "Office hours, study groups and a little hope.", "Week 12. Enough said.", "…then free food at a EUSA event fixes everything."];
-    var last = -1;
-    extraFrames.push(function () {
-      var r = root.getBoundingClientRect(), total = r.height - innerHeight;
-      var p = clamp(-r.top / total, 0, .999), i = Math.floor(p * 5);
-      if (i === last) return; last = i;
-      reel.style.transform = "translateY(" + (-i) + "em)";
-      cap.textContent = CAPS[i];
-      chips.forEach(function (c, j) { c.classList.toggle("on", j <= i); });
-    });
-  })();
 
   /* =========================== HERO canvas: hormone network + DNA =========================== */
   (function () {
