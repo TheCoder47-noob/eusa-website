@@ -53,150 +53,321 @@
   }
 
   /* =====================================================================
-     GAME 1: GUESS THE GLAND
+     GAME 1: GUESS THE GLAND  (drag each gland to its place on the body; its info pops up)
      ===================================================================== */
-  var GL = {
-    hypo: { name: "Hypothalamus", map: "hypo" }, pit: { name: "Pituitary gland", map: "hypo" }, thy: { name: "Thyroid gland", map: "thyroid" },
-    para: { name: "Parathyroid glands", map: "para" }, adr: { name: "Adrenal glands", map: "adrenal" }, pan: { name: "Pancreas", map: "pancreas" },
-    pin: { name: "Pineal gland", map: "pineal" }, ova: { name: "Ovaries", map: "gonads" }, tes: { name: "Testes", map: "gonads" }
+  var SHAPES = {   // drawn in a 100x100 box, reused for slots, tokens and placed glands
+    hypo: '<path d="M22,26 C34,10 66,10 78,26 C74,52 60,74 50,86 C40,74 26,52 22,26Z"/>',
+    pit: '<path d="M30,48 C32,26 68,26 70,48 C72,70 58,82 50,82 C42,82 28,70 30,48Z"/>',
+    pin: '<path d="M50,8 C72,30 74,64 50,92 C26,64 28,30 50,8Z"/>',
+    thy: '<path d="M50,76 C40,80 24,76 16,62 C8,48 8,28 14,14 C18,6 28,6 31,15 C35,30 40,50 50,56 C60,50 65,30 69,15 C72,6 82,6 86,14 C92,28 92,48 84,62 C76,76 60,80 50,76 Z"/>',
+    para: '<ellipse cx="26" cy="32" rx="8" ry="11"/><ellipse cx="26" cy="66" rx="8" ry="11"/><ellipse cx="74" cy="32" rx="8" ry="11"/><ellipse cx="74" cy="66" rx="8" ry="11"/>',
+    adr: '<path d="M10,64 C12,40 26,36 36,64Z"/><path d="M64,64 C74,36 88,40 90,64Z"/>',
+    pan: '<path d="M4,52 C14,34 36,36 50,42 C66,48 82,32 96,44 C102,56 86,62 70,60 C50,58 30,74 12,68 C6,66 3,60 4,52Z"/>',
+    ova: '<ellipse cx="22" cy="50" rx="10" ry="7"/><ellipse cx="78" cy="50" rx="10" ry="7"/>',
+    tes: '<ellipse cx="34" cy="50" rx="13" ry="19"/><ellipse cx="66" cy="50" rx="13" ry="19"/>'
   };
-  var QS = [
-    ["pin", "I'm a tiny gland deep in your brain. When it gets dark, I release melatonin. Who am I?", "Melatonin helps time your sleep–wake cycle: it rises at night and falls with bright light."],
-    ["pin", "I make the “darkness hormone”. Which gland am I?", "Melatonin is nicknamed the darkness hormone because levels rise at night."],
-    ["thy", "I'm shaped like a butterfly and sit at the front of your neck. My hormones help set your metabolism. Who am I?", "The thyroid releases T3 and T4, which help set how fast your cells use energy."],
-    ["thy", "I need iodine to make my hormones, T3 and T4. Who am I?", "Without enough iodine, the thyroid can't make its hormones properly."],
-    ["pit", "I'm pea-sized and sit at the base of your brain. Many call me the “master gland”. Who am I?", "Many pituitary hormones tell other glands what to do. The pituitary itself takes orders from the hypothalamus."],
-    ["pit", "I release growth hormone and ACTH. Who am I?", "ACTH from the pituitary tells the adrenal glands to make cortisol."],
-    ["hypo", "I link your nervous system to your hormones, and I tell the pituitary what to release. Who am I?", "The hypothalamus makes releasing hormones that control the pituitary."],
-    ["hypo", "I make CRH, the hormone that starts the stress chain. Who am I?", "CRH tells the pituitary to release ACTH, which tells the adrenals to release cortisol."],
-    ["adr", "I sit on top of your kidneys and release adrenaline when you get a fright. Who am I?", "Adrenaline gives the quick fight-or-flight boost. Cortisol handles the longer stress response."],
-    ["adr", "I release cortisol, the “stress hormone”. Who am I?", "Cortisol helps manage blood sugar and inflammation during stress."],
-    ["pan", "I'm tucked behind your stomach, and my beta cells release insulin. Who am I?", "Insulin lowers blood sugar by telling cells to take up glucose."],
-    ["pan", "I release glucagon to raise blood sugar when it drops too low. Who am I?", "Glucagon tells the liver to release stored glucose into the blood."],
-    ["para", "I'm four tiny glands stuck to the back of the thyroid. Who am I?", "The parathyroid glands sit behind the thyroid. Usually there are four."],
-    ["para", "I release PTH, which keeps your blood calcium in range. Who am I?", "When blood calcium drops, parathyroid hormone (PTH) raises it again."],
-    ["ova", "I'm found in the pelvis and I release estrogen and progesterone. Who am I?", "Ovaries release eggs and make estrogen and progesterone."],
-    ["ova", "I release eggs, and I also make hormones. Who am I?", "As well as releasing eggs, the ovaries are an endocrine gland."],
-    ["tes", "I make most of the body's testosterone. Who am I?", "Testes make testosterone, which supports sperm production and many body changes at puberty."],
-    ["tes", "I sit outside the main body cavity, where it's cooler, and I make sperm and hormones. Who am I?", "Testes sit in the scrotum, where it's cooler, which suits sperm production."]
+  var INFO = {
+    hypo: { name: "Hypothalamus", makes: "CRH, TRH, ADH and other signalling hormones", job: "Links your brain to your hormones. It tells the pituitary what to release.", hint: "Deep in the brain, just above the pituitary." },
+    pit: { name: "Pituitary gland", makes: "Growth hormone, ACTH, TSH, prolactin and more", job: "The pea-sized “master gland”: many of its hormones tell other glands what to do.", hint: "It hangs just below the hypothalamus on a short stalk." },
+    pin: { name: "Pineal gland", makes: "Melatonin", job: "Releases melatonin when it's dark, which helps time your sleep–wake cycle.", hint: "A tiny cone-shaped gland toward the back of the brain." },
+    thy: { name: "Thyroid gland", makes: "T3 and T4", job: "Helps set your metabolism: how fast your cells use energy.", hint: "It wraps around the windpipe at the front of the neck." },
+    para: { name: "Parathyroid glands", makes: "Parathyroid hormone (PTH)", job: "Keeps blood calcium in range. There are usually four, each about the size of a grain of rice.", hint: "They're tucked on the back of the thyroid. Place the thyroid first!" },
+    adr: { name: "Adrenal glands", makes: "Adrenaline, cortisol and aldosterone", job: "Adrenaline gives the quick fight-or-flight boost. Cortisol handles the longer stress response.", hint: "They sit like little hats on top of the kidneys." },
+    pan: { name: "Pancreas", makes: "Insulin and glucagon", job: "Keeps blood sugar steady: insulin lowers it and glucagon raises it.", hint: "It lies behind the stomach, across the upper abdomen." },
+    ova: { name: "Ovaries", makes: "Estrogen and progesterone", job: "Release eggs and make the hormones that guide puberty and the menstrual cycle.", hint: "A pair of almond-sized glands on either side of the uterus." },
+    tes: { name: "Testes", makes: "Testosterone", job: "Make sperm and testosterone. They sit outside the main body cavity, where it's cooler.", hint: "Look lower down, in the scrotum." }
+  };
+  var BOARDS = [
+    { title: "Brain", lead: "three glands live deep inside the brain.", tokens: ["pit", "hypo", "pin"], decoys: [],
+      art: '<path class="bgart" d="M80,170 C60,90 130,34 230,32 C330,30 400,86 388,166 C382,206 346,222 316,222 L150,222 C108,222 86,204 80,170Z"/><path class="bgart" d="M262,222 C266,252 270,286 276,320 L312,320 C306,286 302,252 300,222Z"/><ellipse class="bgart" cx="352" cy="248" rx="50" ry="30"/><path class="bgline" d="M118,118 C150,86 196,92 226,70 M150,160 C190,122 290,122 330,160 M300,70 C336,84 360,110 366,140 M120,190 C150,176 180,184 205,172"/>',
+      slots: [{ g: "hypo", x: 232, y: 176, sx: .55, sy: .55 }, { g: "pit", x: 238, y: 240, sx: .5, sy: .5 }, { g: "pin", x: 308, y: 160, sx: .45, sy: .45 }] },
+    { title: "Neck", lead: "one gland wraps around the windpipe, and some tiny ones hide behind it.", tokens: ["thy", "para"], decoys: ["pan"],
+      art: '<path class="bgart" d="M156,10 C150,120 140,240 100,330 L360,330 C320,240 310,120 304,10Z"/><rect class="bgart" x="209" y="30" width="42" height="290" rx="20"/><path class="bgline" d="M209,70 H251 M209,100 H251 M209,130 H251 M209,214 H251 M209,244 H251 M209,274 H251 M209,304 H251 M30,330 C100,296 160,308 212,326 M430,330 C360,296 300,308 248,326"/>',
+      slots: [{ g: "thy", x: 230, y: 172, sx: 1.5, sy: 1.5 }, { g: "para", x: 230, y: 172, sx: 1.5, sy: 1.5, after: "thy" }] },
+    { title: "Abdomen", lead: "glands near the kidneys and stomach.", tokens: ["pan", "adr"], decoys: ["thy"],
+      art: '<path class="bgart" d="M110,10 C92,120 100,260 120,330 L340,330 C360,260 368,120 350,10Z"/><path class="bgart" d="M132,96 C170,76 250,84 252,132 C224,156 164,156 136,136Z"/><path class="bgart" d="M278,96 C332,86 346,140 316,178 C294,192 264,178 266,148Z"/><ellipse class="bgart" cx="165" cy="192" rx="28" ry="40"/><ellipse class="bgart" cx="295" cy="192" rx="28" ry="40"/>',
+      slots: [{ g: "adr", x: 230, y: 152, sx: 2.4, sy: 1.3 }, { g: "pan", x: 230, y: 236, sx: 1.7, sy: .95 }] },
+    { title: "Pelvis", lead: "the gonads sit in different places in female and male bodies.", tokens: ["tes", "ova"], decoys: [],
+      art: '<path class="bgart" d="M30,30 C28,120 60,176 120,196 C180,176 212,120 210,30Z"/><path class="bgart" d="M102,92 C102,72 138,72 138,92 C140,120 130,150 120,160 C110,150 100,120 102,92Z"/><path class="bgline" d="M104,86 C86,72 74,74 64,90 M136,86 C154,72 166,74 176,90"/><path class="bgart" d="M250,30 C248,120 280,176 340,196 C400,176 432,120 430,30Z"/><path class="bgart" d="M300,206 C296,262 322,294 340,294 C358,294 384,262 380,206Z"/><line class="bgline" x1="230" y1="20" x2="230" y2="320"/><text class="bgtext" x="120" y="326">FEMALE</text><text class="bgtext" x="340" y="326">MALE</text>',
+      slots: [{ g: "ova", x: 120, y: 92, sx: 1.9, sy: 1 }, { g: "tes", x: 340, y: 250, sx: 1, sy: 1 }] }
   ];
 
   function startGland() {
     stop(); shell("Guess the Gland");
-    var qs = shuffle(QS).slice(0, 10), i = 0, streak = 0, correct = 0, locked = false;
-    $("#g-body").innerHTML = '<div class="g1"><div><svg class="g1__svg" viewBox="-110 0 520 620" id="g1-map" aria-hidden="true"></svg></div><div><p class="clue" id="g1-clue"></p><div class="answers two" id="g1-ans"></div><div id="g1-fb"></div></div></div>';
-    var map = $("#g1-map");
-    map.innerHTML = A.TOUR_SVG || "";
-    map.insertAdjacentHTML("beforeend", '<g class="gland" data-g="para"><circle class="ring" cx="150" cy="147" r="14"/><ellipse class="shape" cx="134" cy="141" rx="3" ry="4.2"/><ellipse class="shape" cx="134" cy="153" rx="3" ry="4.2"/><ellipse class="shape" cx="166" cy="141" rx="3" ry="4.2"/><ellipse class="shape" cx="166" cy="153" rx="3" ry="4.2"/><g class="label"><line x1="129" y1="150" x2="44" y2="160"/><text x="40" y="165" text-anchor="end">Parathyroids</text></g></g>');
-    var glands = [].slice.call(map.querySelectorAll(".gland"));
-    function light(key) { glands.forEach(function (g) { var on = g.getAttribute("data-g") === key; g.classList.toggle("on", on); g.classList.toggle("pop", on); }); }
+    var TOTAL = 9, bi = 0, placed = 0, perfect = 0, streak = 0, left = 0, sel = null, drag = null, mistakes = {}, slots = [];
+    $("#g-body").innerHTML = '<div class="g1p"><div><p class="objective" id="g1-title"></p><svg class="g1p__svg" viewBox="0 0 460 340" id="g1-board" role="img" aria-label="Body diagram with places for glands"></svg>' +
+      '<div class="tray" id="g1-tray"></div><p class="g1msg" id="g1-msg" aria-live="polite"></p></div><div id="g1-info"></div></div>';
+    var svg = $("#g1-board"), tray = $("#g1-tray"), info = $("#g1-info"), msg = $("#g1-msg");
+    cleanup = function () { if (drag && drag.ghost) drag.ghost.remove(); };
 
-    function ask() {
-      var q = qs[i], right = q[0];
-      locked = false; light(null);
-      setProg("Question " + (i + 1) + " of " + qs.length, i / qs.length);
-      $("#g1-clue").textContent = q[1]; $("#g1-fb").innerHTML = "";
-      var others = shuffle(Object.keys(GL).filter(function (k) { return k !== right; })).slice(0, 3);
-      var opts = shuffle([right].concat(others));
-      $("#g1-ans").innerHTML = opts.map(function (k) { return '<button class="ans" type="button" data-k="' + k + '">' + GL[k].name + "</button>"; }).join("");
-      [].forEach.call(document.querySelectorAll("#g1-ans .ans"), function (b) { b.addEventListener("click", function () { pick(b); }); });
-    }
-    function pick(btn) {
-      if (locked) return; locked = true;
-      var q = qs[i], right = q[0], ok = btn.getAttribute("data-k") === right, gain = 0;
-      [].forEach.call(document.querySelectorAll("#g1-ans .ans"), function (b) {
-        b.disabled = true;
-        if (b.getAttribute("data-k") === right) b.classList.add("ok"); else if (b === btn) b.classList.add("bad"); else b.classList.add("dim");
+    function tokenHTML(g) { return '<button class="token" type="button" data-g="' + g + '"><svg viewBox="0 0 100 100" aria-hidden="true"><g class="tshape">' + SHAPES[g] + "</g></svg><span>" + INFO[g].name + "</span></button>"; }
+    function setInfo(html) { info.innerHTML = html; }
+    function drawBoard() {
+      var b = BOARDS[bi]; sel = null; mistakes = {}; left = b.tokens.length; slots = [];
+      setProg("Part " + (bi + 1) + " of " + BOARDS.length + " · " + b.title, placed / TOTAL);
+      $("#g1-title").innerHTML = "<b>" + b.title + "</b>: " + b.lead + "<small>Drag each gland to its place, or tap a gland and then its spot.</small>";
+      svg.innerHTML = b.art;
+      b.slots.forEach(function (s) {
+        var g = svgEl("g", { "class": "slot" + (s.after ? " off" : ""), tabindex: 0, role: "button", "data-g": s.g, "aria-label": "Place a gland here", transform: "translate(" + s.x + " " + s.y + ") scale(" + s.sx + " " + s.sy + ") translate(-50 -50)" }, svg);
+        var inner = svgEl("g", { "class": "sshape" }, g); inner.innerHTML = SHAPES[s.g];
+        slots.push({ g: s.g, el: g, after: s.after, placed: false, off: !!s.after });
       });
-      light(GL[right].map);
-      if (ok) { streak++; correct++; gain = 10 + Math.min(streak - 1, 5) * 2; setScore(score + gain); burst(btn); } else streak = 0;
+      tray.innerHTML = shuffle(b.tokens.concat(b.decoys)).map(tokenHTML).join("");
+      msg.textContent = "";
+      setInfo('<div class="gpop gpop--empty"><p>Place a gland on the body and its info pops up here.</p></div>');
+    }
+    function slotRect(s) { var r = s.el.getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + r.height / 2, rad: Math.max(42, Math.max(r.width, r.height) / 2 * .9 + 18) }; }
+    function nearest(x, y) {
+      var best = null, bd = 1e9;
+      slots.forEach(function (s) { if (s.placed || s.off) return; var r = slotRect(s), d = Math.hypot(x - r.cx, y - r.cy); if (d < r.rad && d < bd) { bd = d; best = s; } });
+      return best;
+    }
+    function hot(s) { slots.forEach(function (x) { x.el.classList.toggle("hot", x === s); }); }
+
+    function drop(tokenEl, slot) {
+      var g = tokenEl.getAttribute("data-g"), b = BOARDS[bi];
+      if (slot && slot.g === g) return success(tokenEl, slot, g);
+      mistakes[g] = (mistakes[g] || 0) + 1; streak = 0; $("#g-streak").hidden = true;
+      tokenEl.classList.remove("sel", "shake"); void tokenEl.offsetWidth; tokenEl.classList.add("shake"); sel = null;
+      var onBoard = b.tokens.indexOf(g) > -1;
+      msg.textContent = !onBoard ? "The " + INFO[g].name.toLowerCase() + " isn't on this part of the body. Try the other parts!" :
+        (slot ? "Not quite. " : "Drop it right on one of the dashed spots. ") + "Hint: " + INFO[g].hint;
+      if (onBoard && mistakes[g] >= 2) slots.forEach(function (s) { if (s.g === g && !s.off) s.el.classList.add("hint"); });
+    }
+    function success(tokenEl, slot, g) {
+      slot.placed = true; slot.el.classList.remove("hint", "hot"); slot.el.classList.add("placed");
+      var first = !mistakes[g]; if (first) perfect++;
+      streak++; var gain = (first ? 20 : 10) + (first ? Math.min(streak - 1, 5) * 2 : 0);
+      setScore(score + gain); burst(slot.el);
       var st = $("#g-streak"); st.hidden = streak < 2; st.textContent = "🔥 " + streak + " in a row";
-      var last = i === qs.length - 1;
-      $("#g1-fb").innerHTML = '<div class="feedback' + (ok ? "" : " bad") + '"><b>' + (ok ? "Correct! +" + gain : "Not quite. It's the " + GL[right].name) + "</b><p>" + q[2] + '</p><button class="btn btn--mint" type="button" id="g1-next">' + (last ? "See results" : "Next question") + "</button></div>";
-      $("#g1-next").addEventListener("click", function () { if (last) finish(); else { i++; ask(); } });
-      $("#g1-next").focus({ preventScroll: true });
+      tokenEl.classList.add("gone"); later(function () { tokenEl.remove(); }, 400);
+      placed++; left--; setProg("Part " + (bi + 1) + " of " + BOARDS.length + " · " + BOARDS[bi].title, placed / TOTAL);
+      var d = INFO[g], done = left === 0, last = bi === BOARDS.length - 1;
+      msg.textContent = (first ? "Perfect! +" : "Placed! +") + gain;
+      if (g === "thy" && slots.some(function (s) { return s.g === "para"; })) {   // flip to the back view to reveal the parathyroid spot
+        slot.el.classList.add("back");
+        slots.forEach(function (s) { if (s.g === "para") { s.off = false; s.el.classList.remove("off"); s.el.classList.add("hint"); } });
+        msg.textContent += " · Now look at the back of the thyroid…";
+      }
+      setInfo('<div class="gpop"><b>' + d.name + '</b><p class="makes"><i>Makes</i>' + d.makes + "</p><p>" + d.job + "</p>" +
+        (done ? '<button class="btn btn--mint" type="button" id="g1-next">' + (last ? "See results" : "Next: " + BOARDS[bi + 1].title + " →") + "</button>" : "") + "</div>");
+      if (done) {
+        [].forEach.call(tray.querySelectorAll(".token"), function (t) { t.classList.add("gone"); });
+        $("#g1-next").addEventListener("click", function () { if (last) finish(); else { bi++; drawBoard(); } });
+        $("#g1-next").focus({ preventScroll: true });
+      }
     }
+    function select(t) {
+      var was = t.classList.contains("sel");
+      [].forEach.call(tray.querySelectorAll(".token"), function (x) { x.classList.remove("sel"); });
+      sel = was ? null : t; if (sel) { t.classList.add("sel"); msg.textContent = "Now tap its spot on the body."; } else msg.textContent = "";
+    }
+
+    tray.addEventListener("pointerdown", function (e) {
+      var t = e.target.closest(".token"); if (!t || drag) return;
+      e.preventDefault(); drag = { t: t, id: e.pointerId, sx: e.clientX, sy: e.clientY, moved: false, ghost: null };
+      try { t.setPointerCapture(e.pointerId); } catch (x) { /* ignore */ }
+    });
+    tray.addEventListener("pointermove", function (e) {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 8) {
+        drag.moved = true; drag.ghost = drag.t.cloneNode(true); drag.ghost.classList.add("ghost"); document.body.appendChild(drag.ghost); drag.t.classList.add("lifted"); msg.textContent = "";
+      }
+      if (drag.moved) { drag.ghost.style.left = e.clientX + "px"; drag.ghost.style.top = e.clientY + "px"; hot(nearest(e.clientX, e.clientY)); }
+    });
+    function endDrag(e, cancelled) {
+      if (!drag || e.pointerId !== drag.id) return;
+      var d = drag; drag = null;
+      if (d.moved) { d.ghost.remove(); d.t.classList.remove("lifted"); var s = cancelled ? null : nearest(e.clientX, e.clientY); hot(null); if (!cancelled) drop(d.t, s); }
+      else if (!cancelled) select(d.t);
+    }
+    tray.addEventListener("pointerup", function (e) { endDrag(e, false); });
+    tray.addEventListener("pointercancel", function (e) { endDrag(e, true); });
+    tray.addEventListener("click", function (e) { var t = e.target.closest(".token"); if (t && e.detail === 0) select(t); });   // keyboard
+    function slotActivate(el) {
+      var s = slots.filter(function (x) { return x.el === el; })[0];
+      if (!s || s.placed || s.off) return;
+      if (!sel) { msg.textContent = "Pick a gland from the tray first."; return; }
+      var t = sel; drop(t, s);
+    }
+    svg.addEventListener("click", function (e) { var el = e.target.closest(".slot"); if (el) slotActivate(el); });
+    svg.addEventListener("keydown", function (e) { if ((e.key === "Enter" || e.key === " ") && e.target.classList && e.target.classList.contains("slot")) { e.preventDefault(); slotActivate(e.target); } });
+
     function finish() {
-      var msg = correct >= 9 ? "Gland guru! You really know your endocrine system." : correct >= 7 ? "Hormone hero! Nearly perfect." : correct >= 4 ? "Getting there. Try again for a higher streak." : "Good start. The Learn pages can help with the glands.";
-      results("gland", 0, correct + " of " + qs.length + " correct", msg);
+      var msgs = perfect >= 8 ? "Gland guru! Nearly every gland went straight to its place." : perfect >= 6 ? "Hormone hero! You know the body map well." : perfect >= 3 ? "Getting there. Try again for more first-try placements." : "Good start. The Learn pages show where each gland lives.";
+      results("gland", 0, perfect + " of " + TOTAL + " placed first try", msgs);
     }
-    ask();
+    drawBoard();
   }
 
   /* =====================================================================
-     GAME 2: HOMEOSTASIS CHALLENGE
+     GAME 2: HOMEOSTASIS CHALLENGE  (tap the pancreas cells; watch hormones travel and glucose respond)
      ===================================================================== */
-  var SCEN = [
-    { tag: "After a meal", text: "You just ate a meal. Your blood glucose is rising!", start: 86, ins: .15, glu: .15, choices: [
-      { t: "Release insulin", ok: 1, end: 50, ins: 1, glu: 0, fb: "Rising glucose tells the pancreas to release insulin. Insulin signals muscle and fat cells to take up glucose and the liver to store it, so glucose settles back into the balanced range." },
-      { t: "Release glucagon", end: 97, ins: 0, glu: 1, fb: "Glucagon does the opposite of what's needed here: it tells the liver to release glucose, pushing blood glucose even higher." },
-      { t: "Do nothing", end: 84, ins: .15, glu: .15, fb: "Without a response, glucose stays high. A healthy body acts straight away, with the pancreas releasing insulin." }] },
-    { tag: "Fasting", text: "It's been many hours since you last ate. Your blood glucose is drifting low!", start: 18, ins: .1, glu: .2, choices: [
-      { t: "Release glucagon", ok: 1, end: 50, ins: 0, glu: 1, fb: "Glucagon tells the liver to break down stored glycogen and make new glucose, so glucose is released into the blood and stays in range between meals." },
-      { t: "Release insulin", end: 8, ins: 1, glu: 0, fb: "Insulin lowers blood glucose, so it would push it even lower. Not what you want when glucose is already low." },
-      { t: "Do nothing", end: 14, ins: .1, glu: .2, fb: "Glucose keeps falling. Between meals the pancreas releases glucagon to help keep it steady." }] },
-    { tag: "Insulin resistance · 1 of 2", text: "After a meal, glucose is high and there's plenty of insulin in the blood, yet glucose stays high. What's going on?", start: 88, ins: 1, glu: .1, choices: [
-      { t: "There's no insulin at all", end: 88, ins: 1, glu: .1, fb: "Insulin is clearly present (look at the indicator). Having no insulin at all is a different situation, as in type 1 diabetes." },
-      { t: "Insulin is there, but cells respond to it poorly", ok: 1, end: 88, ins: 1, glu: .1, fb: "That's insulin resistance. The pancreas makes insulin and it binds its receptors, but the cells' response is weaker, so glucose stays high." },
-      { t: "The liver is releasing too little glucagon", end: 88, ins: 1, glu: .1, fb: "Less glucagon would lower glucose, not keep it high. The problem is how well cells respond to the insulin that's already there." }] },
-    { tag: "Insulin resistance · 2 of 2", text: "Cells respond weakly to insulin. How can you help bring glucose down?", start: 88, ins: 1, glu: .1, choices: [
-      { t: "Move your muscles (exercise)", ok: 1, end: 55, ins: 1, glu: 0, fb: "Working muscles can take up glucose even when the insulin signal is weaker, and regular activity helps cells respond better to insulin over time." },
-      { t: "Release even more insulin", partial: 1, end: 74, ins: 1, glu: 0, fb: "That's what the body tries first, and it helps a little. But the cells still respond weakly, so glucose stays on the high side." },
-      { t: "Release glucagon", end: 98, ins: 1, glu: 1, fb: "Glucagon tells the liver to release more glucose, which makes high blood glucose even higher." }] }
+  var DUR = 26;
+  var HSC = [
+    { tag: "After a meal", title: "A meal is coming", intro: "Soon you'll eat. When glucose rises, tap the pancreas's beta cells to release insulin and keep glucose in the green zone.", start: 48, drift: 0, insPow: 6, gluPow: 5,
+      events: [{ t: 2, rise: 16, dur: 2.4, msg: "You just ate a meal! Glucose is rising." }, { t: 14, rise: 8, dur: 1, msg: "A snack! Glucose ticks up again." }],
+      explain: "Rising glucose makes the beta cells release insulin. Insulin binds receptors on muscle and fat cells, telling them to take in glucose, and tells the liver to store it. Too much insulin can push glucose too low, which is why the body adjusts step by step." },
+    { tag: "Fasting", title: "Many hours without food", intro: "You haven't eaten for hours, so glucose slowly drifts down. Tap the alpha cells to release glucagon and keep it in the green zone.", start: 50, drift: -2, insPow: 6, gluPow: 5,
+      events: [{ t: .5, rise: 0, dur: 0, msg: "It's been hours since you ate. Glucose is slowly falling." }],
+      explain: "Between meals, alpha cells release glucagon. Glucagon tells the liver to break down stored glycogen and make new glucose, so blood glucose stays steady. Insulin would have pushed it even lower." },
+    { tag: "Insulin resistance", title: "When cells respond weakly", intro: "After a meal your insulin is already high, but your cells respond to it poorly. Insulin helps only a little. What else can help muscles take up glucose?", start: 50, drift: 0, insPow: 1.2, gluPow: 5, exercise: true, baseIns: .9,
+      events: [{ t: 1.5, rise: 16, dur: 2.4, msg: "You ate a meal. Glucose is rising, and insulin is already high." }, { t: 15, rise: 8, dur: 1, msg: "Another snack!" }],
+      explain: "In insulin resistance, insulin is present and binds its receptors, but the cell's response is weaker, so glucose stays high. That's different from having no insulin at all. Moving muscles helps them take in glucose even when the insulin signal is weak." }
   ];
   var HEX = '<svg viewBox="-12 -12 24 24" aria-hidden="true"><polygon points="9.5,5.5 0,11 -9.5,5.5 -9.5,-5.5 0,-11 9.5,-5.5" fill="none" stroke="' + INK + '" stroke-width="2.6"/></svg>';
+  var HEXPTS = (function () { var p = []; for (var i = 0; i < 6; i++) { var a = Math.PI / 3 * i + Math.PI / 6; p.push((9 * Math.cos(a)).toFixed(1) + "," + (9 * Math.sin(a)).toFixed(1)); } return p.join(" "); })();
 
   function startHomeo() {
     stop(); shell("Homeostasis Challenge");
-    var r = 0, attempts = 0, tried = {}, max = SCEN.length * 20;
-    $("#g-body").innerHTML = '<div class="gmeter" id="meter"><div class="gmeter__zones"><span>Too low</span><span>Balanced</span><span>Too high</span></div><div class="gmeter__track"><div class="gmeter__drop" id="drop">' + HEX + '</div></div><div class="gmeter__state" id="mstate"></div></div>' +
-      '<div class="inds"><div class="ind"><b>Insulin</b><i id="ind-ins"></i></div><div class="ind ind--glu"><b>Glucagon</b><i id="ind-glu"></i></div></div>' +
-      '<p class="scen-tag" id="scen-tag"></p><p class="clue" id="scen"></p><div class="answers" id="choices"></div><div id="fb"></div>';
-    var meter = $("#meter"), drop = $("#drop");
-    function zone(g) { return g < 33 ? "low" : g > 67 ? "high" : "ok"; }
-    function setMeter(g, ins, glu) {
-      drop.style.left = g + "%";
-      meter.classList.toggle("is-ok", zone(g) === "ok");
-      var z = zone(g); $("#mstate").textContent = z === "ok" ? "Balanced ✓" : z === "low" ? "Too low" : "Too high";
-      $("#ind-ins").style.setProperty("--lvl", ins); $("#ind-glu").style.setProperty("--lvl", glu);
+    var round = 0, alive = true, raf = 0;
+    cleanup = function () { alive = false; cancelAnimationFrame(raf); };
+    $("#g-body").innerHTML = '<div id="hm"></div>';
+    function intro() {
+      var s = HSC[round]; setProg("Scenario " + (round + 1) + " of " + HSC.length, round / HSC.length);
+      $("#hm").innerHTML = '<div class="interstitial"><p class="scen-tag">' + s.tag + "</p><h3>" + s.title + "</h3><p>" + s.intro + '</p><button class="btn btn--mint" type="button" id="hm-go">Start (' + DUR + " seconds)</button></div>";
+      $("#hm-go").addEventListener("click", play); $("#hm-go").focus({ preventScroll: true });
     }
-    function show() {
-      var s = SCEN[r]; attempts = 0; tried = {};
-      setProg("Round " + (r + 1) + " of " + SCEN.length, r / SCEN.length);
-      $("#scen-tag").textContent = s.tag; $("#scen").textContent = s.text; $("#fb").innerHTML = "";
-      setMeter(s.start, s.ins, s.glu);
-      renderChoices();
+    function play() {
+      var sc = HSC[round];
+      $("#hm").innerHTML = '<div class="hm__grid"><div class="hm__scene"><svg class="hm-svg" viewBox="0 0 640 420" id="hm-svg" role="img" aria-label="Pancreas, bloodstream, muscle cell and liver cell"></svg><p class="hm__toast" id="hm-toast" aria-live="polite"></p></div>' +
+        '<div class="hm__panel"><p class="objective">' + sc.tag + ": keep glucose in the green zone.<small>Tap the pancreas cells to release " + (sc.exercise ? "insulin or glucagon, or tap MOVE." : "hormones.") + "</small></p>" +
+        '<div class="hm__meterwrap"><div class="gmeter gmeter--v" id="meter"><div class="gmeter__track"><div class="gmeter__drop" id="drop">' + HEX + '</div></div><div class="gmeter__zones"><span>Too high</span><span>Balanced</span><span>Too low</span></div></div>' +
+        '<div class="hm__side"><div class="gmeter__state" id="mstate"></div><div class="hm__stat"><span id="hm-bal">In balance: 0.0 s</span><div class="hm__timer"><i id="hm-tbar"></i></div></div>' +
+        '<div class="inds inds--col"><div class="ind"><b>Insulin</b><i id="ind-ins"></i></div><div class="ind ind--glu"><b>Glucagon</b><i id="ind-glu"></i></div></div></div></div></div></div>';
+      var svg = $("#hm-svg"), meter = $("#meter"), drop = $("#drop"), toastEl = $("#hm-toast");
+      function E(tag, a, p) { return svgEl(tag, a, p || svg); }
+      // pancreas + two cell clusters
+      var panG = E("g", { transform: "translate(320 62) scale(3.3 1.5) translate(-50 -50)" }); panG.innerHTML = SHAPES.pan; panG.setAttribute("class", "hm-pan");
+      function cluster(cx, cls, label, sub, key) {
+        var g = E("g", { "class": "hm-cl " + cls, tabindex: 0, role: "button", "aria-label": label + ": " + sub });
+        [[0, -10], [-13, 6], [13, 6], [0, 14], [-26, -6], [26, -6]].forEach(function (o) { E("circle", { cx: cx + o[0], cy: 62 + o[1], r: 11 }, g); });
+        E("circle", { "class": "hit", cx: cx, cy: 62, r: 50 }, g);
+        var t1 = E("text", { x: cx, y: 112, "text-anchor": "middle", "class": "hm-lbl" }, g); t1.textContent = label;
+        var t2 = E("text", { x: cx, y: 128, "text-anchor": "middle", "class": "hm-sub" }, g); t2.textContent = sub;
+        g.addEventListener("click", function () { release(key); });
+        g.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); release(key); } });
+        return g;
+      }
+      var beta = cluster(236, "beta", "BETA CELLS", "tap: insulin", "ins"), alpha = cluster(404, "alpha", "ALPHA CELLS", "tap: glucagon", "glu");
+      // bloodstream
+      E("rect", { x: 0, y: 140, width: 640, height: 86, "class": "hm-blood" });
+      var t = E("text", { x: 14, y: 156, "class": "hm-sub" }); t.textContent = "BLOODSTREAM";
+      var hexes = []; for (var i = 0; i < 22; i++) { var h = E("polygon", { points: HEXPTS, "class": "hm-hex" }); hexes.push({ el: h, y: 160 + (i * 19 % 52), sp: 12 + (i % 5) * 6, x0: i * 53 }); }
+      // cells
+      function cell(x, cls, name, recPath, rxs) {
+        var g = E("g", { "class": "hm-cell " + cls });
+        E("rect", { "class": "body", x: x, y: 292, width: 200, height: 112, rx: 36 }, g);
+        var nuc = E("circle", { "class": "nuc", cx: x + 100, cy: 356, r: 20 }, g); void nuc;
+        var tx = E("text", { x: x + 100, y: 396, "text-anchor": "middle", "class": "hm-lbl" }, g); tx.textContent = name;
+        rxs.forEach(function (rx) { var r = E("path", { d: recPath, transform: "translate(" + rx + " 292)", fill: "none", stroke: CREAM, "stroke-width": 4, "stroke-linejoin": "round" }, g); void r; });
+        return g;
+      }
+      var muscle = cell(60, "muscle", "MUSCLE CELL", "M-11,-14 L-11,0 L11,0 L11,-14", [110, 160, 210]);
+      [135, 185].forEach(function (cx) { var c = E("g", { "class": "chan" }, muscle); E("rect", { x: cx - 9, y: 279, width: 7, height: 26, rx: 3 }, c); E("rect", { x: cx + 2, y: 279, width: 7, height: 26, rx: 3 }, c); });
+      var liver = cell(380, "liver", "LIVER CELL", "M-12,-16 L0,0 L12,-16", [430, 480, 530]);
+      var exBtn = null;
+      if (sc.exercise) {
+        exBtn = E("g", { "class": "hm-ex", tabindex: 0, role: "button", "aria-label": "Move your muscles" });
+        E("circle", { cx: 160, cy: 340, r: 28 }, exBtn);
+        var xt = E("text", { x: 160, y: 345, "text-anchor": "middle" }, exBtn); xt.textContent = "MOVE";
+        exBtn.addEventListener("click", exercise); exBtn.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); exercise(); } });
+      }
+      var mols = E("g", {});
+      var bars = { ins: null, glu: null };
+      // indicators (insulin / glucagon levels) as HTML under the meter
+      bars.ins = $("#ind-ins"); bars.glu = $("#ind-glu");
+
+      // ---- simulation state ----
+      var g = sc.start, tt = 0, bal = 0, outT = 0, recovered = false, cd = 0, exCd = 0, insL = sc.baseIns || .1, gluL = .1, lastZone = "", seen = {};
+      var rising = [], effects = [], molecules = [], uptakes = [], fired = {}, toastUntil = 0, cnt = { ins: 0, glu: 0 };
+      function toast(text, secs) { toastEl.textContent = text; toastUntil = tt + (secs || 3.2); }
+      function zone(v) { return v < 33 ? "low" : v > 67 ? "high" : "ok"; }
+      function spawn(type, delay) {
+        var tx, startX = type === "ins" ? 236 : 404, rx = type === "ins" ? [110, 160, 210][cnt.ins++ % 3] : [430, 480, 530][cnt.glu++ % 3];
+        var el = E(type === "ins" ? "rect" : "polygon", type === "ins" ? { x: -8, y: -8, width: 16, height: 16, rx: 3, fill: MINT } : { points: "-10,-8 10,-8 0,10", fill: CREAM }, mols); void tx;
+        el.setAttribute("opacity", 0);
+        var pts = [[startX, 84], [startX, 182], [rx, 182], [rx, 280]], len = 0, seg = [];
+        for (var k = 1; k < pts.length; k++) { var d = Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]); seg.push(d); len += d; }
+        molecules.push({ type: type, el: el, pts: pts, seg: seg, len: len, d: -delay * 200, rx: rx });
+      }
+      function release(type) {
+        if (cd > 0) return; cd = .35;
+        spawn(type, 0); spawn(type, .18);
+        if (type === "ins") { insL = Math.min(1, insL + .4); } else { gluL = Math.min(1, gluL + .4); }
+        (type === "ins" ? beta : alpha).classList.remove("tap"); void (type === "ins" ? beta : alpha).getBoundingClientRect(); (type === "ins" ? beta : alpha).classList.add("tap");
+      }
+      function uptake(fromX, fromY, toY, n, cls) {
+        for (var k = 0; k < n; k++) { var el = E("polygon", { points: HEXPTS, "class": "hm-hex " + (cls || "") }, mols); uptakes.push({ el: el, x: fromX + (k - (n - 1) / 2) * 22, y0: fromY, y1: toY, t: -k * .18 }); }
+      }
+      function pulse(c) { c.classList.add("pulse"); setTimeout(function () { c.classList.remove("pulse"); }, 700); }
+      function arrive(m) {
+        m.el.remove();
+        if (m.type === "ins") {
+          effects.push({ rate: -sc.insPow / 1.2, left: 1.2 }); pulse(muscle);
+          muscle.classList.add(sc.insPow > 3 ? "open" : "weak"); setTimeout(function () { muscle.classList.remove("open", "weak"); }, 1300);
+          uptake(m.rx, 190, 340, sc.insPow > 3 ? 2 : 1);
+          if (!seen.ins) { seen.ins = 1; toast(sc.insPow > 3 ? "Insulin binds its receptor, and the cell lets glucose in." : "Insulin binds, but the response is weak. Only a little glucose gets in.", 3.6); }
+        } else {
+          effects.push({ rate: sc.gluPow / 1.2, left: 1.2 }); pulse(liver); uptake(m.rx, 340, 196, 2, "up");
+          if (!seen.glu) { seen.glu = 1; toast("Glucagon tells the liver to release stored glucose into the blood.", 3.6); }
+        }
+      }
+      function exercise() {
+        if (exCd > 0) return; exCd = 3; effects.push({ rate: -4, left: 2.5 }); pulse(muscle);
+        muscle.classList.add("open"); setTimeout(function () { muscle.classList.remove("open"); }, 2500);
+        uptake(135, 190, 340, 2); setTimeout(function () { uptake(185, 190, 340, 2); }, 700); setTimeout(function () { uptake(160, 190, 340, 2); }, 1500);
+        exBtn.classList.add("cool"); setTimeout(function () { exBtn.classList.remove("cool"); }, 3000);
+        toast("Working muscles take up glucose even when the insulin signal is weak.", 3.6);
+      }
+
+      var last = performance.now();
+      function frame(now) {
+        if (!alive || !svg.isConnected) return;
+        var dt = Math.min(.06, (now - last) / 1000); last = now; tt += dt; cd = Math.max(0, cd - dt); exCd = Math.max(0, exCd - dt);
+        sc.events.forEach(function (ev, i) { if (!fired[i] && tt >= ev.t) { fired[i] = 1; toast(ev.msg, 3.4); if (ev.dur) rising.push({ rate: ev.rise, left: ev.dur }); } });
+        g += sc.drift * dt;
+        rising.forEach(function (r) { if (r.left > 0) { var u = Math.min(dt, r.left); g += r.rate * u; r.left -= u; } });
+        effects.forEach(function (r) { if (r.left > 0) { var u = Math.min(dt, r.left); g += r.rate * u; r.left -= u; } });
+        g = Math.max(0, Math.min(100, g));
+        var z = zone(g);
+        if (z === "ok") { bal += dt; if (outT >= 1.5 && !recovered) { recovered = true; toast("Recovered! Back in balance. +5", 3); } outT = 0; } else outT += dt;
+        insL = Math.max(sc.baseIns || 0, insL - dt * .3); gluL = Math.max(0, gluL - dt * .3);
+        // visuals
+        drop.style.setProperty("--g", g.toFixed(1));
+        if (z !== lastZone) { lastZone = z; meter.classList.toggle("is-ok", z === "ok"); $("#mstate").textContent = z === "ok" ? "Balanced ✓" : z === "low" ? "Too low" : "Too high"; }
+        bars.ins.style.setProperty("--lvl", insL.toFixed(2)); bars.glu.style.setProperty("--lvl", gluL.toFixed(2));
+        $("#hm-bal").textContent = "In balance: " + bal.toFixed(1) + " s"; $("#hm-tbar").style.width = Math.min(100, tt / DUR * 100).toFixed(1) + "%";
+        var n = Math.round(g / 100 * 22);
+        hexes.forEach(function (h, i) { if (i < n) { h.el.setAttribute("opacity", 1); h.el.setAttribute("transform", "translate(" + (((h.x0 + tt * h.sp) % 700) - 30).toFixed(1) + " " + (h.y + Math.sin(tt * 1.3 + i) * 4).toFixed(1) + ")"); } else h.el.setAttribute("opacity", 0); });
+        molecules = molecules.filter(function (m) {
+          m.d += 200 * dt; if (m.d < 0) return true;
+          if (m.d >= m.len) { arrive(m); return false; }
+          var rem = m.d, k = 0; while (rem > m.seg[k]) { rem -= m.seg[k]; k++; }
+          var a = m.pts[k], b = m.pts[k + 1], u = rem / m.seg[k];
+          m.el.setAttribute("transform", "translate(" + (a[0] + (b[0] - a[0]) * u).toFixed(1) + " " + (a[1] + (b[1] - a[1]) * u).toFixed(1) + ")"); m.el.setAttribute("opacity", 1); return true;
+        });
+        uptakes = uptakes.filter(function (u) {
+          u.t += dt / .9; if (u.t < 0) { u.el.setAttribute("opacity", 0); return true; }
+          if (u.t >= 1) { u.el.remove(); return false; }
+          u.el.setAttribute("opacity", (1 - Math.max(0, u.t - .7) / .3).toFixed(2)); u.el.setAttribute("transform", "translate(" + u.x + " " + (u.y0 + (u.y1 - u.y0) * u.t).toFixed(1) + ")"); return true;
+        });
+        if (toastUntil && tt > toastUntil) { toastEl.textContent = ""; toastUntil = 0; }
+        if (exBtn && tt > 4 && exCd === 0 && !seen.ex && g > 67) exBtn.classList.add("hint");
+        if (tt >= DUR) return finishScenario();
+        raf = requestAnimationFrame(frame);
+      }
+      function finishScenario() {
+        var gain = Math.round(bal * 2) + (recovered ? 5 : 0); setScore(score + gain);
+        var last = round === HSC.length - 1;
+        $("#hm").innerHTML = '<div class="interstitial"><p class="scen-tag">' + sc.tag + " complete</p><h3>" + bal.toFixed(1) + " s in balance · +" + gain + "</h3><p>" + (recovered ? "You recovered from being out of balance. +5 bonus. " : "") + sc.explain + '</p><button class="btn btn--mint" type="button" id="hm-next">' + (last ? "See results" : "Next scenario") + "</button></div>";
+        $("#hm-next").addEventListener("click", function () { if (last) done(); else { round++; intro(); } }); $("#hm-next").focus({ preventScroll: true });
+      }
+      toast("Tap the pancreas cells to release hormones.", 3);
+      raf = requestAnimationFrame(frame);
     }
-    function renderChoices() {
-      var s = SCEN[r];
-      if (!s._order) s._order = shuffle(s.choices);
-      $("#choices").innerHTML = s._order.map(function (c, i) { return '<button class="ans' + (tried[i] ? " bad" : "") + '" type="button" data-i="' + i + '"' + (tried[i] ? " disabled" : "") + ">" + c.t + "</button>"; }).join("");
-      [].forEach.call(document.querySelectorAll("#choices .ans:not(:disabled)"), function (b) { b.addEventListener("click", function () { choose(+b.getAttribute("data-i"), b); }); });
-    }
-    function choose(i, btn) {
-      var s = SCEN[r], c = s._order[i];
-      [].forEach.call(document.querySelectorAll("#choices .ans"), function (b) { b.disabled = true; });
-      $("#fb").innerHTML = "";
-      tried[i] = true; setMeter(c.end, c.ins, c.glu);
-      later(function () {
-        var good = c.ok || c.partial, gain = 0;
-        if (good) { gain = c.partial ? 10 : attempts === 0 ? 20 : 15; setScore(score + gain); if (c.ok) burst(drop); }
-        var last = r === SCEN.length - 1;
-        var head = c.ok ? (attempts ? "Recovered! +" + gain : "Balanced! +" + gain) : c.partial ? "A little help. +" + gain : "Not quite";
-        var buttons = good ? '<button class="btn btn--mint" type="button" id="go">' + (last ? "See results" : "Next round") + "</button>" :
-          '<button class="btn btn--mint" type="button" id="retry">Try again</button><button class="btn btn--ghost" type="button" id="go">' + (last ? "Skip and finish" : "Skip") + "</button>";
-        $("#fb").innerHTML = '<div class="feedback' + (good ? "" : " bad") + '"><b>' + head + "</b><p>" + c.fb + '</p><div class="btn-row">' + buttons + "</div></div>";
-        $("#go").addEventListener("click", function () { if (last) finish(); else { r++; show(); } });
-        if (!good) $("#retry").addEventListener("click", function () { attempts++; $("#fb").innerHTML = ""; setMeter(s.start, s.ins, s.glu); renderChoices(); });
-        (good ? $("#go") : $("#retry")).focus({ preventScroll: true });
-      }, 1500);
-    }
-    function finish() {
-      SCEN.forEach(function (s) { delete s._order; });
-      results("homeo", max, "Round complete", score >= 70 ? "Excellent balance! You know your feedback loops." : score >= 45 ? "Nicely done. Mistakes are how feedback loops learn." : "Good effort. Try again and watch which hormone moves glucose which way.");
-    }
-    SCEN.forEach(function (s) { delete s._order; });
-    show();
+    function done() { results("homeo", 0, "Round complete", score >= 110 ? "Excellent balance! You kept glucose steady and recovered fast." : score >= 70 ? "Nicely done. Feedback loops take practice." : "Good effort. Try again and watch how insulin and glucagon move glucose."); }
+    intro();
   }
 
   /* =====================================================================
@@ -413,8 +584,8 @@
      MENU + ROUTER
      ===================================================================== */
   var GAMES = {
-    gland: { title: "Guess the Gland", desc: "Read the clue, name the gland, and watch it light up on the body. Ten questions, with streak bonuses.", icon: "glands", start: startGland },
-    homeo: { title: "Homeostasis Challenge", desc: "Keep blood glucose balanced: choose insulin, glucagon or neither, and see what happens to the meter.", icon: "molecule", start: startHomeo },
+    gland: { title: "Guess the Gland", desc: "Drag each gland to its place on the body, then see what it makes and does.", icon: "glands", start: startGland },
+    homeo: { title: "Homeostasis Challenge", desc: "Tap the pancreas to release insulin or glucagon and keep blood glucose in the green zone.", icon: "molecule", start: startHomeo },
     delivery: { title: "Hormone Delivery", desc: "Match hormones to the cells with the right receptor shape. Three short stages unlock one after another.", icon: "community", start: startDelivery }
   };
   function menu() {
