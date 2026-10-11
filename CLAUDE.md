@@ -21,7 +21,7 @@ club info. Plain multi-page HTML/CSS/JS, no build step, no dependencies. `BRIEF.
    in HTML. The Demo button (bottom-left) can highlight them all.
 2. Use the name **"Endocrinology Undergraduate Students Association"** (matches the logo), not "Student".
 3. Don't call EUSA an "official WUSA club" or use WUSA/UW logos until confirmed.
-4. Science content must be accurate. The club's own slides contained errors (see `founder-notes.html` and the `note`
+4. Science content must be accurate. The club's own slides contained errors (see the founder checklist .docx in the workspace folder and the `note`
    fields in `data.js`); don't copy them back. Every Learn article keeps its Sources list and the "not medical advice" note.
 5. Palette is greens + cream only (tokens at top of `styles.css`); yellow `--sun` is only for the hiring banner / demo UI.
    Caveat script only for the tagline. The cut-out collage heading is used once (Team page).
@@ -36,7 +36,7 @@ club info. Plain multi-page HTML/CSS/JS, no build step, no dependencies. `BRIEF.
 | `assets/js/learn-anim.js` | Scenes for the Learn articles (loaded only on `article.html`) |
 | `assets/css/styles.css` | Everything; later `@media` blocks override earlier rules, so mobile overrides must stay *after* base rules |
 | `index/about/events/learn/article/team/get-involved/contact.html` | One page each; `article.html?slug=…` renders any `learn` entry |
-| `founder-notes.html` | Demo-only page for the founder (issues + what's still needed). Not part of the real site |
+| `../EUSA-Founder-Checklist.docx` | Word doc for the founder: what we still need from the club + issues found. Kept outside the repo on purpose (the repo is public) |
 
 ## The scroll-story engine
 

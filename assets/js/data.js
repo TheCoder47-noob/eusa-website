@@ -140,29 +140,51 @@ window.EUSA = {
     }
   ],
 
-  /* ---- Team: fill in name / program / photo once each person agrees ---- */
+  /* ---- Role descriptions (shown on the Get Involved page) ---- */
+  roles: [
+    { name: "Admin", members: [
+      { role: "President", desc: "Leads the club, chairs meetings, and represents EUSA to the university and outside groups." },
+      { role: "VP Internal", desc: "Meeting minutes, records, internal communication and scheduling." },
+      { role: "VP Finance", desc: "Accounts, budgets and reimbursements, following WUSA finance policies." }
+    ]},
+    { name: "Academics", members: [
+      { role: "VP Academics", desc: "Runs educational programming and checks that all content is accurate." },
+      { role: "Academics Coordinator", desc: "Researches and prepares presentations and learning materials." }
+    ]},
+    { name: "Events", members: [
+      { role: "VP Events", desc: "Plans and runs events from start to finish: rooms, timelines, logistics." },
+      { role: "Events Coordinator", desc: "Helps with setup, attendee engagement and feedback; can run small events alone." }
+    ]},
+    { name: "Marketing", members: [
+      { role: "VP Marketing", desc: "Social media, branding, the posting schedule and engagement." },
+      { role: "Marketing Coordinator / Graphic Designer", desc: "Posters, graphics, slides and social content." }
+    ]},
+    { name: "Outreach", members: [
+      { role: "First-Year Representative", desc: "The voice of first-years: outreach and recruitment in first-year classes." }
+    ]}
+  ],
+
+  /* ---- Team: names + roles only for now (from the club's Spring 2026 master list).
+          Optional per person: photo: "assets/img/team/name.jpg", program: "2A Biomedical Sciences" ---- */
   team: {
-    term: "Fall 2026",
+    term: "Spring 2026",
     groups: [
       { name: "Admin", blurb: "Keeps the club running.", members: [
-        { role: "President", desc: "Leads the club, chairs meetings, and represents EUSA to the university and outside groups." },
-        { role: "VP Internal", desc: "Meeting minutes, records, internal communication and scheduling." },
-        { role: "VP Finance", desc: "Accounts, budgets and reimbursements, following WUSA finance policies." }
-      ]},
-      { name: "Academics", blurb: "The science behind every post.", members: [
-        { role: "VP Academics", desc: "Runs educational programming and checks that all content is accurate." },
-        { role: "Academics Coordinator", desc: "Researches and prepares presentations and learning materials." }
+        { role: "President", name: "Vaidik Shingala", desc: "Leads the club, chairs meetings, and represents EUSA to the university and outside groups." },
+        { role: "VP Internal", name: "Kichu Pai", desc: "Meeting minutes, records, internal communication and scheduling." },
+        { role: "VP Internal", name: "Kavya Desai", desc: "Meeting minutes, records, internal communication and scheduling." },
+        { role: "VP Finance", name: "Kashpreet Sidhu", desc: "Accounts, budgets and reimbursements, following WUSA finance policies." },
+        { role: "Graphic Design", name: "Krish Pathak", desc: "Posters, graphics, slides and social content." }
       ]},
       { name: "Events", blurb: "Picnics, workshops and everything in between.", members: [
-        { role: "VP Events", desc: "Plans and runs events from start to finish: rooms, timelines, logistics." },
-        { role: "Events Coordinator", desc: "Helps with setup, attendee engagement and feedback; can run small events alone." }
+        { role: "VP Events", name: "Amy Krosnicki", desc: "Plans and runs events from start to finish: rooms, timelines, logistics." },
+        { role: "Events Coordinator", name: "Abir Wali", desc: "Helps with setup, attendee engagement and feedback; can run small events alone." },
+        { role: "Events Coordinator", name: "Sara Rajesh", desc: "Helps with setup, attendee engagement and feedback; can run small events alone." }
       ]},
-      { name: "Marketing", blurb: "The posters, posts and reels.", members: [
-        { role: "VP Marketing", desc: "Social media, branding, the posting schedule and engagement." },
-        { role: "Marketing Coordinator / Graphic Designer", desc: "Posters, graphics, slides and social content." }
-      ]},
-      { name: "Outreach", blurb: "Your first-year connection.", members: [
-        { role: "First-Year Representative", desc: "The voice of first-years: outreach and recruitment in first-year classes." }
+      { name: "Academics", blurb: "The science behind every post.", members: [
+        { role: "VP Academic", name: "Zeel Patel", desc: "Runs educational programming and checks that all content is accurate." },
+        { role: "Academic Coordinator", name: "Prabhroop Kaur", desc: "Researches and prepares presentations and learning materials." },
+        { role: "Academic Coordinator", name: "Rifzah Ahmed", desc: "Researches and prepares presentations and learning materials." }
       ]}
     ]
   }

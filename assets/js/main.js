@@ -138,7 +138,7 @@
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") document.body.classList.remove("nav-open"); });
   }
 
-  /* ---------- demo panel (founder walkthrough) ---------- */
+  /* ---------- demo panel (preview toggles; demo build only) ---------- */
   function renderDemoPanel() {
     var wrap = document.createElement("div");
     wrap.innerHTML = '<button class="demo-fab" aria-expanded="false" aria-controls="demo-panel">Demo ✦</button>' +
@@ -146,7 +146,7 @@
       "<p>Only visible in this demo. Try the features the real site will have.</p>" +
       '<label class="switch">Preview the "We\'re hiring" banner<input type="checkbox" id="demo-hire"></label>' +
       '<label class="switch">Highlight everything "to be included"<input type="checkbox" id="demo-tbi"></label>' +
-      '<a class="btn btn--dark" style="width:100%;margin-top:8px" href="founder-notes.html">Notes for the founder →</a></div>';
+      '</div>';
     document.body.appendChild(wrap);
     var fab = $(".demo-fab"), panel = $("#demo-panel");
     fab.addEventListener("click", function () { var o = panel.classList.toggle("open"); fab.setAttribute("aria-expanded", o); });
@@ -269,18 +269,19 @@
     $("#a-more").innerHTML = others.map(learnCard).join("") + learnPlaceholder(others.length);
   }
 
+  function initials(n) { return n.split(/\s+/).map(function (w) { return w.charAt(0); }).slice(0, 2).join("").toUpperCase(); }
   function renderTeam() {
     $("#team-term").textContent = D.team.term + " Executive Team";
     $("#team-groups").innerHTML = D.team.groups.map(function (g) {
       return '<section class="team-group" aria-labelledby="tg-' + g.name + '"><div class="team-group__head" data-reveal><h2 id="tg-' + g.name + '" style="margin:0">' + esc(g.name) + '</h2><span class="muted">' + esc(g.blurb) + "</span></div>" +
         '<div class="team-grid">' + g.members.map(function (m, i) {
           return '<div class="member" tabindex="0" data-reveal style="--d:' + (i * 0.08) + 's"><div class="member__inner">' +
-            '<div class="member__face member__front"><div class="avatar">' + (m.photo ? '<img src="' + esc(m.photo) + '" alt="' + esc(m.name || m.role) + '" loading="lazy">' : I.user) + "</div>" +
-            '<div class="member__role">' + esc(m.role) + "</div>" +
-            "<div>" + (m.name ? "<strong>" + esc(m.name) + "</strong>" : tbi("name")) + "</div>" +
-            '<div style="margin-top:4px">' + (m.program ? esc(m.program) : tbi("program & year")) + "</div>" +
+            '<div class="member__face member__front"><div class="avatar">' + (m.photo ? '<img src="' + esc(m.photo) + '" alt="' + esc(m.name || m.role) + '" loading="lazy" style="width:100%;height:100%;object-fit:cover">' : (m.name ? '<span class="initials" aria-hidden="true">' + esc(initials(m.name)) + "</span>" : I.user)) + "</div>" +
+            '<div class="member__name">' + (m.name ? esc(m.name) : tbi("name")) + "</div>" +
+            '<div class="member__title">' + esc(m.role) + "</div>" +
+            (m.program ? '<div style="margin-top:4px;font-size:.9rem">' + esc(m.program) + "</div>" : "") +
             '<div class="member__hint">Hover or tap to see the role ↻</div></div>' +
-            '<div class="member__face member__back"><h4>' + esc(m.role) + "</h4><p>" + esc(m.desc) + '</p><p style="font-size:.85rem;opacity:.8;margin:0">' + tbi("fun fact / favourite hormone") + "</p></div>" +
+            '<div class="member__face member__back"><h4>' + esc(m.role) + "</h4><p>" + esc(m.desc) + "</p></div>" +
             "</div></div>";
         }).join("") + "</div></section>";
     }).join("");
@@ -303,7 +304,7 @@
       '<a class="btn btn--mint" href="' + S.instagram + '" target="_blank" rel="noopener">' + I.insta + " Get notified on Instagram</a>";
     var acc = $("#roles-acc");
     if (acc && !acc.innerHTML.trim()) {
-      acc.innerHTML = D.team.groups.map(function (g, i) {
+      acc.innerHTML = D.roles.map(function (g, i) {
         return "<details" + (i === 0 ? " open" : "") + "><summary>" + esc(g.name) + '</summary><div class="roles">' +
           g.members.map(function (m) { return '<div class="role"><b>' + esc(m.role) + "</b>" + esc(m.desc) + "</div>"; }).join("") + "</div></details>";
       }).join("");

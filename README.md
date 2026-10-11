@@ -11,7 +11,7 @@ Double-click `index.html`. It's plain HTML/CSS/JS, so no install or server is ne
 You do need internet for the Google Fonts.
 
 The yellow **Demo** button (bottom-left) lets you preview the hiring banner and highlight
-every "to be included" placeholder. `founder-notes.html` lists what's still needed from the club.
+every "to be included" placeholder. What's still needed from the club is listed in the founder checklist Word document (kept outside this repo).
 
 ## Where things are
 

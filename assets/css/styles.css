@@ -505,13 +505,14 @@ a.card:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 24px 50
   .hero h1 .word > span { transform: none; }
 }
 
-/* ---------- scroll hint arrow inside every step card ---------- */
-.step__hint { display: flex; align-items: center; gap: 10px; margin-top: 14px; padding-top: 12px; border-top: 1px solid rgba(168,213,180,.2); color: var(--mint); font: 700 .72rem/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; }
-.step__hint .chevs { display: grid; width: 18px; height: 22px; place-items: center; }
-.step__hint .chevs i { display: block; width: 9px; height: 9px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); margin-top: -4px; opacity: 0; animation: chevRun 1.5s infinite; }
-.step__hint .chevs i:nth-child(2) { animation-delay: .25s; }
-.step__hint .chevs i:nth-child(3) { animation-delay: .5s; }
+/* ---------- "keep scrolling" arrow: fixed on the stage (the cards move, this doesn't) ---------- */
+.stage-hint { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); z-index: 3; display: flex; align-items: center; gap: 10px; padding: .5em 1.1em .5em .8em; border-radius: 999px; background: rgba(31,50,41,.78); border: 1px solid rgba(168,213,180,.3); color: var(--mint); font: 700 .72rem/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; pointer-events: none; }
+.stage-hint .chevs { display: grid; width: 18px; height: 22px; place-items: center; }
+.stage-hint .chevs i { display: block; width: 9px; height: 9px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: rotate(45deg); margin-top: -4px; opacity: 0; animation: chevRun 1.5s infinite; }
+.stage-hint .chevs i:nth-child(2) { animation-delay: .25s; }
+.stage-hint .chevs i:nth-child(3) { animation-delay: .5s; }
 @keyframes chevRun { 0% { opacity: 0; transform: translateY(-6px) rotate(45deg); } 40% { opacity: 1; } 100% { opacity: 0; transform: translateY(6px) rotate(45deg); } }
+@media (max-width: 860px) { .stage-hint { bottom: 6px; padding: .4em .9em .4em .6em; font-size: .64rem; } }
 
 /* ---------- home: jump-to-story buttons ---------- */
 .story-nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 26px; }
@@ -526,3 +527,8 @@ a.card:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 24px 50
 @media (max-width: 860px) {
   .scrolly--article .scrolly__visual { align-items: flex-start; }
 }
+
+/* ---------- team cards: initials + name first ---------- */
+.avatar .initials { font: 900 3.4rem/1 var(--font-display); color: rgba(45,74,34,.55); letter-spacing: .02em; }
+.member__name { font: 800 1.45rem/1.05 var(--font-display); text-transform: uppercase; color: var(--leaf); margin: 2px 0 6px; }
+.member__title { font-weight: 600; font-size: .95rem; color: var(--forest); }

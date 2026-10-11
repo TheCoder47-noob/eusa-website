@@ -42,11 +42,8 @@
     var bar = document.createElement("div"); bar.className = "scrolly__bar"; bar.innerHTML = "<i></i>"; st.stage.appendChild(bar); st.bar = bar.firstChild;
     var dots = document.createElement("div"); dots.className = "scrolly__dots"; dots.setAttribute("aria-hidden", "true");
     dots.innerHTML = st.steps.map(function () { return "<i></i>"; }).join(""); st.stage.appendChild(dots); st.dots = [].slice.call(dots.children);
-    st.steps.forEach(function (x) {
-      var c = x.querySelector(".step__card"); if (!c) return;
-      var h = document.createElement("div"); h.className = "step__hint"; h.setAttribute("aria-hidden", "true");
-      h.innerHTML = '<span class="chevs"><i></i><i></i><i></i></span><span>Keep scrolling</span>'; c.appendChild(h);
-    });
+    var hint = document.createElement("div"); hint.className = "stage-hint"; hint.setAttribute("aria-hidden", "true");
+    hint.innerHTML = '<span class="chevs"><i></i><i></i><i></i></span><span>Keep scrolling</span>'; st.stage.appendChild(hint);
     st.api = init(st) || {};
     stories.push(st);
   }

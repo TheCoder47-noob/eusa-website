@@ -327,7 +327,7 @@
     el("path", { d: pathOf(dip, 18, 30, hx, function (v) { return 205 + 100 * v; }), fill: "none", stroke: CREAM, "stroke-width": 3.5, "stroke-dasharray": "9 7" }, chart);
     txt(chart, 66, 138, "Body temperature", { fill: MINT, font: "800 14px 'DM Sans',sans-serif" });
     txt(chart, 66, 194, "Blood pressure", { fill: CREAM, font: "800 14px 'DM Sans',sans-serif" });
-    txt(chart, hx(25.5), YB - 118, "melatonin ↑", { anchor: "middle", font: "800 12px 'DM Sans',sans-serif", fill: MINT });
+    txt(chart, hx(24.2), YB - 30, "melatonin rises ↑", { anchor: "middle", font: "800 12px 'DM Sans',sans-serif", fill: CREAM });
     chart.setAttribute("opacity", 0);
     return { frame: function (p, t, age) {
       var ts = t / 1000, stage = Math.min(4, Math.floor(age / .75)), co = smooth(.3, .6, p);
@@ -358,8 +358,8 @@
     var nat = el("path", { d: pathOf(melCurve, 18, 30, hx, function (v) { return YB - v * H; }), fill: "none", stroke: CREAM, "stroke-width": 3, "stroke-dasharray": "8 7", opacity: .8 }, g);
     var sh = el("path", { fill: "none", stroke: MINT, "stroke-width": 4.5, "stroke-linecap": "round" }, g);
     var area = el("path", { fill: "rgba(168,213,180,.2)" }, g);
-    txt(g, X0 + 6, 300, "natural rhythm - - -", { anchor: "start", font: "700 12px 'DM Sans',sans-serif", fill: CREAM });
-    txt(g, X0 + 6, 320, "with a well-timed dose ——", { anchor: "start", font: "700 12px 'DM Sans',sans-serif", fill: MINT });
+    txt(g, 190, 214, "natural rhythm - - -", { anchor: "middle", font: "700 12px 'DM Sans',sans-serif", fill: CREAM });
+    txt(g, 450, 214, "with a well-timed dose ——", { anchor: "middle", font: "700 12px 'DM Sans',sans-serif", fill: MINT });
     var pill = el("g", {}, g);
     el("rect", { x: -16, y: -8, width: 32, height: 16, rx: 8, fill: CREAM }, pill); el("rect", { x: 0, y: -8, width: 16, height: 16, rx: 8, fill: MINT }, pill); rect(pill, -2, -8, 4, 16, 0, { fill: MINT });
     txt(g, 320, 484, "Talk to a healthcare provider before taking melatonin", { anchor: "middle", font: "700 13px 'DM Sans',sans-serif", fill: MINT });
