@@ -520,3 +520,27 @@ a.card:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 24px 50
 .avatar .initials { font: 900 3.4rem/1 var(--font-display); color: rgba(45,74,34,.55); letter-spacing: .02em; }
 .member__name { font: 800 1.45rem/1.05 var(--font-display); text-transform: uppercase; color: var(--leaf); margin: 2px 0 6px; }
 .member__title { font-weight: 600; font-size: .95rem; color: var(--forest); }
+
+/* ---------- big "Scroll to play" under the article title ---------- */
+.scroll-play { display: flex; flex-direction: column; align-items: center; margin-top: clamp(28px, 6vw, 56px); text-align: center; }
+.scroll-play span { font: 900 clamp(2.2rem, 7vw, 4rem)/1 var(--font-display); text-transform: uppercase; letter-spacing: .06em; color: var(--mint); }
+.scroll-play i { display: block; width: 24px; height: 24px; margin-top: -10px; border-right: 5px solid var(--mint); border-bottom: 5px solid var(--mint); border-radius: 3px; transform: rotate(45deg); opacity: 0; animation: chevRun 1.5s infinite; }
+.scroll-play i:nth-of-type(1) { margin-top: 6px; }
+.scroll-play i:nth-of-type(2) { animation-delay: .25s; }
+.scroll-play i:nth-of-type(3) { animation-delay: .5s; }
+.tba-line { font: 900 clamp(1.8rem, 4vw, 2.6rem)/1.1 var(--font-display); text-transform: uppercase; letter-spacing: .04em; color: var(--forest); margin: 10px 0 8px; }
+
+/* ---------- Games drop-down in the top bar ---------- */
+.nav-dd { position: relative; display: flex; align-items: center; }
+.nav-dd__btn { width: 28px; height: 36px; margin-left: -6px; border: 0; background: none; color: var(--cream); cursor: pointer; border-radius: 10px; display: grid; place-items: center; }
+.nav-dd__btn::before { content: ""; width: 7px; height: 7px; border-right: 2.5px solid currentColor; border-bottom: 2.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform .25s; }
+.nav-dd.open .nav-dd__btn::before { transform: translateY(2px) rotate(-135deg); }
+.nav-dd__menu { position: absolute; top: calc(100% + 6px); right: -8px; min-width: 230px; padding: 8px; border-radius: 16px; background: var(--forest-deep); border: 1px solid rgba(168,213,180,.3); box-shadow: 0 18px 40px rgba(0,0,0,.35); display: none; flex-direction: column; gap: 2px; z-index: 130; }
+.nav-dd__menu a { border-radius: 10px; padding: .7em 1em; white-space: nowrap; }
+.nav-dd:hover .nav-dd__menu, .nav-dd:focus-within .nav-dd__menu, .nav-dd.open .nav-dd__menu { display: flex; }
+@media (max-width: 900px) {
+  .nav-dd { display: block; }
+  .nav-dd__btn { display: none; }
+  .nav-dd__menu { position: static; display: flex; min-width: 0; box-shadow: none; border: 0; background: none; padding: 0 0 0 18px; }
+  .nav-dd__menu a { font-size: 1rem; opacity: .9; padding: .55em 1em; }
+}

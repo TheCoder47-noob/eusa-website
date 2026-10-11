@@ -115,7 +115,12 @@
         '<span class="wordmark" aria-hidden="true">E' + heartSVG("u-heart") + "SA</span></a>" +
         '<button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span></span></button>' +
         '<nav id="site-nav" class="nav" aria-label="Main">' +
-        NAV.map(function (n) { return '<a href="' + n[0] + '"' + (n[2] === page ? ' aria-current="page"' : "") + ">" + n[1] + "</a>"; }).join("") +
+        NAV.map(function (n) {
+          var link = '<a href="' + n[0] + '"' + (n[2] === page ? ' aria-current="page"' : "") + ">" + n[1] + "</a>";
+          if (n[2] !== "games") return link;
+          return '<div class="nav-dd">' + link + '<button class="nav-dd__btn" type="button" aria-label="Games menu" aria-expanded="false" aria-haspopup="true"></button>' +
+            '<div class="nav-dd__menu"><a href="games.html#gland">Guess the Gland</a><a href="games.html#homeo">Homeostasis Challenge</a><a href="games.html#delivery">Hormone Delivery</a></div></div>';
+        }).join("") +
         "</nav></div></header>";
     }
     var f = $("#site-footer");
@@ -135,6 +140,11 @@
       toggle.setAttribute("aria-expanded", open); toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
     });
     $all(".nav a").forEach(function (a) { a.addEventListener("click", function () { document.body.classList.remove("nav-open"); }); });
+    $all(".nav-dd").forEach(function (dd) {
+      var btn = $(".nav-dd__btn", dd);
+      btn.addEventListener("click", function (e) { e.stopPropagation(); var o = dd.classList.toggle("open"); btn.setAttribute("aria-expanded", o); });
+      document.addEventListener("click", function (e) { if (!dd.contains(e.target)) { dd.classList.remove("open"); btn.setAttribute("aria-expanded", "false"); } });
+    });
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") document.body.classList.remove("nav-open"); });
   }
 
@@ -193,11 +203,15 @@
       "<div>" + I.pin + "<span>" + (ev.location ? esc(ev.location) : "Location " + tbi()) + "</span></div>" +
       (ev.partners && ev.partners.length ? "<div>" + I.people + "<span>With " + ev.partners.map(esc).join(", ") + (ev.partnersTbi ? " + " + tbi("other partners") : "") + "</span></div>" : "") +
       "</div>";
-    return '<article class="card event' + (ev.tba ? " event--tba" : "") + '" data-reveal>' + posterHTML(ev) +
+    if (ev.tba) {
+      return '<article class="card event event--tba" data-reveal>' + posterHTML(ev) +
+        '<div class="event__body"><span class="tag tag--up">Upcoming</span><h3>' + esc(ev.title) + '</h3><p class="tba-line">To be announced</p>' +
+        "<p>Follow " + esc(S.instagramHandle) + " to hear first.</p></div></article>";
+    }
+    return '<article class="card event" data-reveal>' + posterHTML(ev) +
       '<div class="event__body"><span class="tag ' + (past ? "tag--past" : "tag--up") + '">' + (past ? "Past event" : "Upcoming") + "</span>" +
       "<h3>" + esc(ev.title) + (ev.tba ? " " + tbi("name & details") : "") + "</h3>" + meta +
       "<p>" + (ev.description ? esc(ev.description) : "Details " + tbi() + ". Follow " + esc(S.instagramHandle) + " to hear first.") + "</p>" +
-      (ev.dateNote ? '<p class="muted" style="font-size:.88rem">' + tbi("check") + " " + esc(ev.dateNote) + "</p>" : "") +
       (!past && ev.rsvpUrl ? '<a class="btn btn--dark" href="' + esc(ev.rsvpUrl) + '" target="_blank" rel="noopener">RSVP ' + I.arrow + "</a>" : (!past ? '<span class="tbi">RSVP link</span>' : "")) +
       "</div></article>";
   }
@@ -214,7 +228,7 @@
 
   /* ---------- page renderers ---------- */
   function renderHome() {
-    var heroLogo = $("#hero-logo"); if (heroLogo) heroLogo.innerHTML = bigLogoSVG() + '<p class="logo-note">' + tbi("placeholder logo: real file to be included") + "</p>";
+    var heroLogo = $("#hero-logo"); if (heroLogo) heroLogo.innerHTML = bigLogoSVG();
     var ne = $("#next-event");
     if (ne) {
       var s = splitEvents();
@@ -250,8 +264,8 @@
     $("#a-title").textContent = a.title;
     $("#a-summary").textContent = a.summary;
     $("#a-meta").innerHTML = (a.status === "draft" ? '<span class="tag tag--draft">Draft · pending VP Academics review</span>' : "") +
-      a.tags.map(function (t) { return '<span class="tag" style="background:rgba(168,213,180,.2);color:var(--cream)">' + esc(t) + "</span>"; }).join("") +
-      '<p style="margin-top:10px">By ' + (a.author ? esc(a.author) : "EUSA Academics team " + tbi("author name")) + " · " + a.readMins + " min read · scroll to play</p>";
+      a.tags.map(function (t) { return '<span class="tag" style="background:rgba(168,213,180,.2);color:var(--cream)">' + esc(t) + "</span>"; }).join("");
+    $("#a-play").innerHTML = '<span>Scroll to play</span><i></i><i></i><i></i>';
     $("#a-icon").innerHTML = I[a.icon] || I.molecule;
     var steps = a.steps.map(function (st) {
       return '<div class="step" data-scene="' + esc(st.scene) + '"><div class="container"><div class="step__card"><span class="step__num">' + esc(st.num) + "</span><h3>" + esc(st.title) + "</h3>" + st.html + "</div></div></div>";
@@ -264,7 +278,7 @@
       '<div class="sources"><h3>Sources</h3><ol>' + a.sources.map(function (x) {
         return "<li>" + (x.url ? '<a href="' + esc(x.url) + '" target="_blank" rel="noopener">' + esc(x.label) + "</a>" : esc(x.label)) + "</li>";
       }).join("") + "</ol>" +
-      (a.sourcesTbi ? '<p style="margin:10px 0 0">' + tbi("more sources + VP Academics check") + "</p>" : "") + "</div>";
+      "</div>";
     var others = D.learn.filter(function (x) { return x !== a; });
     $("#a-more").innerHTML = others.map(learnCard).join("") + learnPlaceholder(others.length);
   }

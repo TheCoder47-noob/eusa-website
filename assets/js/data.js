@@ -38,8 +38,7 @@ window.EUSA = {
       partners: ["Science Society"],
       partnersTbi: true,     // more partner logos on the poster — to be confirmed
       rsvpUrl: null,
-      poster: "periodic",
-      dateNote: "Instagram shows both July 16 and July 29 — to be confirmed (two picnics, or one rescheduled?)"
+      poster: "periodic"
     },
     {
       id: "periodic-picnic-jul-29",
